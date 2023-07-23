@@ -60,7 +60,6 @@ function DiscountList(props: Props) {
     } else notifyError("Fail");
   };
 
-
   console.log(searchItem);
   useEffect(() => {
     (async () => {
@@ -114,13 +113,8 @@ function DiscountList(props: Props) {
       <table className="w-full border">
         <thead>
           <tr className="bg-gray-50 border-b">
-            <th
-              className="p-2 border-r cursor-pointer text-sm font-thin text-gray-500"
-            >
-              <div className="flex items-center justify-center">
-                ID
-                
-              </div>
+            <th className="p-2 border-r cursor-pointer text-sm font-thin text-gray-500">
+              <div className="flex items-center justify-center">ID</div>
             </th>
             <th className="p-2 border-r cursor-pointer text-sm font-thin text-gray-500">
               <div className="flex items-center justify-center">Code</div>
@@ -188,17 +182,29 @@ function DiscountList(props: Props) {
                 >
                   <td className="p-2 border-r">{index + 1}</td>
                   <td className="p-2 border-r">{item?.code}</td>
-                  <td className="p-2 border-r">{formatDate(item?.dateStart)}</td>
-                  <td className="p-2 border-r">{formatDate(item?.dateStart)}</td>
+                  <td className="p-2 border-r">
+                    {formatDate(item?.dateStart)}
+                  </td>
+                  <td className="p-2 border-r">{formatDate(item?.dateEnd)}</td>
                   <td className="p-2 border-r">{item?.enable.toString()}</td>
                   <td className="p-2 border-r">{item?.is_oic.toString()}</td>
                   <td className="p-2 border-r">{item?.is_oid.toString()}</td>
-                  <td className="p-2 border-r">{item?.is_percent.toString()}</td>
+                  <td className="p-2 border-r">
+                    {item?.is_percent.toString()}
+                  </td>
                   <td className="p-2 border-r">{item?.is_ship.toString()}</td>
-                  <td className="p-2 border-r">{moneyFormater(item?.maxPrice)}</td>
-                  <td className="p-2 border-r">{moneyFormater(item?.maxPrice)}</td>
+                  <td className="p-2 border-r">
+                    {moneyFormater(item?.maxPrice)}
+                  </td>
+                  <td className="p-2 border-r">
+                    {moneyFormater(item?.maxPrice)}
+                  </td>
                   <td className="p-2 border-r">{item?.quantity}</td>
-                  <td className="p-2 border-r">{item?.value < 100 ? item?.value + "%" : moneyFormater(item?.value)}</td>
+                  <td className="p-2 border-r">
+                    {item?.value < 100
+                      ? item?.value + "%"
+                      : moneyFormater(item?.value)}
+                  </td>
                   <td className="flex justify-center items-center m-[10px] gap-[8px]">
                     <a
                       className={

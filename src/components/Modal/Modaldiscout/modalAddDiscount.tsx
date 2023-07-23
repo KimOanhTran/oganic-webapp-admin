@@ -124,7 +124,7 @@ export default function ModalAddDiscount({
                   <div className="flex items-center gap-4 mb-2  ">
                     <label
                       htmlFor="countries_disabled"
-                      className="block w-[200px] text-sm font-medium text-gray-900 dark:text-white"
+                      className="block w-[200px] text-sm font-medium text-gray-900 dark:text-black"
                     >
                       Enable
                     </label>
@@ -144,7 +144,7 @@ export default function ModalAddDiscount({
                   <div className="flex items-center gap-4 mb-2  ">
                     <label
                       htmlFor="countries_disabled"
-                      className="block w-[200px] text-sm font-medium text-gray-900 dark:text-white"
+                      className="block w-[200px] text-sm font-medium text-gray-900 dark:text-black"
                     >
                       Percent Type
                     </label>
@@ -164,7 +164,7 @@ export default function ModalAddDiscount({
                   <div className="flex items-center gap-4 mb-2  ">
                     <label
                       htmlFor="countries_disabled"
-                      className="block w-[200px] text-sm font-medium text-gray-900 dark:text-white"
+                      className="block w-[200px] text-sm font-medium text-gray-900 dark:text-black"
                     >
                       Ship type
                     </label>
@@ -184,7 +184,7 @@ export default function ModalAddDiscount({
                   <div className="flex items-center gap-4 mb-2  ">
                     <label
                       htmlFor="countries_disabled"
-                      className="block w-[200px] text-sm font-medium text-gray-900 dark:text-white"
+                      className="block w-[200px] text-sm font-medium text-gray-900 dark:text-black"
                     >
                       Customer type
                     </label>
@@ -204,7 +204,7 @@ export default function ModalAddDiscount({
                   <div className="flex items-center gap-4 mb-2  ">
                     <label
                       htmlFor="countries_disabled"
-                      className="block w-[200px] text-sm font-medium text-gray-900 dark:text-white"
+                      className="block w-[200px] text-sm font-medium text-gray-900 dark:text-black"
                     >
                       Expired
                     </label>
@@ -224,7 +224,7 @@ export default function ModalAddDiscount({
                   <div className="flex items-center justify-between gap-4">
                     <label
                       htmlFor="countries_disabled"
-                      className="block text-sm font-medium text-gray-900 dark:text-white"
+                      className="block text-sm font-medium text-gray-900 dark:text-black"
                     >
                       Date Start
                     </label>
@@ -239,7 +239,7 @@ export default function ModalAddDiscount({
                   <div className="flex items-center justify-between gap-4">
                     <label
                       htmlFor="countries_disabled"
-                      className="block  text-sm font-medium text-gray-900 dark:text-white"
+                      className="block  text-sm font-medium text-gray-900 dark:text-black"
                     >
                       Date End
                     </label>

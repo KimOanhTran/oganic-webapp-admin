@@ -37,7 +37,7 @@ function Productlist(props: Props) {
   const [_idProduct, set_idProduct] = useState("");
   const [enable, setEnable] = useState(0);
   const [category, setCategory] = useState<Array<any>>([]);
-  const [filterCategory, setFilterCategory] = useState("")
+  const [filterCategory, setFilterCategory] = useState("");
 
   // const [codeProduct, setCodeProduct] = useState(0);
   const handleRemove = (removeId: number) => {
@@ -84,7 +84,7 @@ function Productlist(props: Props) {
 
   const handleSelect = (e: any) => {
     // console.log(e.target.value);
-    setFilterCategory(e.target.value)
+    setFilterCategory(e.target.value);
   };
 
   const sorting = (col: string) => {
@@ -104,7 +104,6 @@ function Productlist(props: Props) {
       setOrder("ACS");
     }
   };
-
 
   useEffect(() => {
     (async () => {
@@ -414,7 +413,7 @@ const ProductRow = (props: any) => {
           }}
           className="bg-yellow-500 p-2 text-white hover:shadow-lg text-xs font-thin cursor-pointer"
         >
-          <span>Colors</span>
+          <span>History</span>
         </a>
         <a
           onClick={() => {
