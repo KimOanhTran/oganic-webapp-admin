@@ -2,7 +2,7 @@ interface ResponseInstant {
   msg: string;
   statusCode: number;
   error: boolean;
-  failure: Array<any>
+  failure: Array<any>;
 }
 
 export interface ReturnReponse<T> extends ResponseInstant {
@@ -11,4 +11,11 @@ export interface ReturnReponse<T> extends ResponseInstant {
 
 export interface ReturnListReponse<T> extends ResponseInstant {
   data: Array<T>;
+}
+
+export interface ReturnDataReponse<T> {
+  res: object;
+  statusCode: number;
+  message: string;
+  data: T;
 }

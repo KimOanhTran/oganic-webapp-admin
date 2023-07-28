@@ -99,6 +99,20 @@ const Navbar = (props: Props) => {
             <li>
               <NavLink
                 className="text-sm text-gray-400 hover:text-gray-500"
+                to="/supplier"
+                style={({ isActive }) => {
+                  return {
+                    color: isActive ? "rgb(37 99 235)" : "rgb(156 163 175",
+                    fontWeight: isActive ? "bold" : "400",
+                  };
+                }}
+              >
+                Supplier List
+              </NavLink>
+            </li>
+            <li>
+              <NavLink
+                className="text-sm text-gray-400 hover:text-gray-500"
                 to="/categorylist"
                 style={({ isActive }) => {
                   return {
@@ -226,7 +240,7 @@ const Navbar = (props: Props) => {
             </button>
           </div>
         </nav>
-      ) : role === "Sale" ? (
+      ) : role === "Sale" || role === "Warehouse" ? (
         <nav className="relative px-4 py-4 flex justify-between items-center bg-white">
           <Link to="/billlist" className="text-3xl font-bold leading-none">
             <img src={logo} className="w-14 h-15 ml-20" alt="" />

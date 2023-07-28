@@ -1,11 +1,14 @@
+import { PlusSquareOutlined } from "@ant-design/icons";
 import React, { useEffect, useState } from "react";
 import { IResUserList } from "../../apis/user/user.type";
 import userApi from "../../apis/user/userApi";
 import ModalDiscountUser from "../../components/Modal/User/modalCreateDiscountCategory";
 import ModalSendMail from "../../components/Modal/User/modalSendmail";
+import ModelEditEmployee from "../../components/Modal/ModalEmployyeeAccount/modalEditEmployee";
 import Pagination from "../../components/Pangination/Pagination";
 import { USER_MODEL } from "../../models/user.model";
 import { notifyError, notifySuccess } from "../../utils/notify";
+import ModalRegiserEmployee from "../../components/Modal/ModalEmployyeeAccount/modalRegiserEmployee";
 
 type Props = {};
 function Userlist(props: Props) {
@@ -14,8 +17,11 @@ function Userlist(props: Props) {
   const total = 20;
   const [currentPage, setCurrentPage] = useState<number>(0);
   const [userList, setUserList] = useState([]);
-  const [showModalDiscountUser, setShowModalDiscountUser] = useState(false);
+  const [showModalEditEmployee, setShowModalEditEmployee] = useState(false);
   const [showModalSendMail, setShowModalSendMail] = useState(false);
+  const [showModalRegisterEmployee, setShowModalRegisterEmployee] =
+    useState(false);
+  const [idUser, setIdUser] = useState("");
   const [idUserSelect, setIdUserSelect] = useState("");
   const [searchItem, setSearchItem] = useState("");
   const [order, setOrder] = useState("ACS");
@@ -42,8 +48,9 @@ function Userlist(props: Props) {
   // console.log(searchItem)
 
   const handleGetIDUser = (idUser: any) => {
-    setIdUserSelect(idUser);
-    setShowModalDiscountUser(true);
+    console.log(idUser);
+    setIdUser(idUser);
+    setShowModalEditEmployee(true);
   };
 
   const handleEnableUser = async (_id: any, enable: boolean) => {
@@ -126,6 +133,15 @@ function Userlist(props: Props) {
                 onChange={(e) => setSearchItem(e.target.value)}
               />
             </div>
+            <div
+              className="flex p-2 items-center gap-2 bg-green-600 ml-2 rounded-lg text-white w-[70px] cursor-pointer"
+              onClick={() => {
+                setShowModalRegisterEmployee(true);
+              }}
+            >
+              <span className="block select-none">ADD</span>
+              <PlusSquareOutlined />
+            </div>
           </form>
           <table className="w-full border">
             <thead>
@@ -203,11 +219,6 @@ function Userlist(props: Props) {
                 </th>
                 <th className="p-2 border-r cursor-pointer text-sm font-thin text-gray-500">
                   <div className="flex items-center justify-center">
-                    Cancel Bill
-                  </div>
-                </th>
-                <th className="p-2 border-r cursor-pointer text-sm font-thin text-gray-500">
-                  <div className="flex items-center justify-center">
                     Actions
                   </div>
                 </th>
@@ -218,7 +229,9 @@ function Userlist(props: Props) {
                 userList
                   .filter((value: any, index: number) => {
                     if (searchItem == "") {
-                      return value.role === "Customer";
+                      return (
+                        value.role === "Sale" || value.role === "Warehouse"
+                      );
                     } else if (
                       value?.name
                         .toLowerCase()
@@ -258,15 +271,15 @@ function Userlist(props: Props) {
                       <td className="p-2 border-r">
                         {item?.enable.toString()}
                       </td>
-                      <td className="p-2 border-r">{item?.warning}</td>
+                      {/* <td className="p-2 border-r">{item?.warning}</td> */}
                       <td className="flex gap-4 justify-center">
                         <a
                           onClick={() => {
                             handleGetIDUser(item?._id);
                           }}
-                          className="bg-orange-500 p-2 text-white hover:shadow-lg text-xs font-thin cursor-pointer"
+                          className="bg-blue-500 p-2 text-white hover:shadow-lg text-xs font-thin cursor-pointer"
                         >
-                          Discount
+                          Edit
                         </a>
                         <a
                           onClick={() => {
@@ -282,12 +295,20 @@ function Userlist(props: Props) {
                         </a>
                         <a
                           onClick={() => {
+                            handleGetIDUser(item?._id);
+                          }}
+                          className="bg-orange-500 p-2 text-white hover:shadow-lg text-xs font-thin cursor-pointer"
+                        >
+                          Delete
+                        </a>
+                        {/* <a
+                          onClick={() => {
                             setShowModalSendMail(true);
                           }}
                           className="absolute top-3 rounded-md right-[400px] bg-pink-500 p-2 text-white hover:shadow-lg text-xs font-thin cursor-pointer"
                         >
-                          Send Mail
-                        </a>
+                          Send Mail1
+                        </a> */}
                       </td>
                     </tr>
                   ))
@@ -300,16 +321,23 @@ function Userlist(props: Props) {
           </table>
         </div>
       </div>
-      {showModalDiscountUser && (
-        <ModalDiscountUser
-          setOpenModalDiscountUser={setShowModalDiscountUser}
-          _idUser={idUserSelect}
+      {showModalEditEmployee && (
+        <ModelEditEmployee
+          setOpenModalEditEmployee={setShowModalEditEmployee}
+          _idUser={idUser}
+          reload={setReload}
         />
       )}
       {showModalSendMail && (
         <ModalSendMail
           setOpenModalSendMail={setShowModalSendMail}
           listUser={selectedId}
+        />
+      )}
+      {showModalRegisterEmployee && (
+        <ModalRegiserEmployee
+          setShowModalRegisterEmployee={setShowModalRegisterEmployee}
+          reload={setReload}
         />
       )}
     </>

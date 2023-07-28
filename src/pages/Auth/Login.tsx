@@ -17,10 +17,7 @@ const Login = (props: Props) => {
   };
 
   const dispatch = useDispatch();
-  const {
-    register,
-    handleSubmit,
-  } = useForm<FormValues>();
+  const { register, handleSubmit } = useForm<FormValues>();
 
   const login = async (params: IReqLogin) => {
     const result = await authApi.login(params);
@@ -29,11 +26,15 @@ const Login = (props: Props) => {
       saveToLocalStorage("token", result.data.tokens.access.token);
       dispatch(updateAuthStatus(true));
       dispatch(updateAuthRole("Admin"));
-    } else if(result.data.user.role === "Sale") {
+    } else if (result.data.user.role === "Sale") {
       saveToLocalStorage("token", result.data.tokens.access.token);
       dispatch(updateAuthStatus(true));
       dispatch(updateAuthRole("Sale"));
-    }else {
+    } else if (result.data.user.role === "Warehouse") {
+      saveToLocalStorage("token", result.data.tokens.access.token);
+      dispatch(updateAuthStatus(true));
+      dispatch(updateAuthRole("Warehouse"));
+    } else {
       notifyError("Wrong Role");
     }
   };
@@ -42,7 +43,7 @@ const Login = (props: Props) => {
     console.log(data);
     login(data);
   };
-  
+
   return (
     <section className="h-screen">
       <div className="container px-6 py-12 h-full m-auto">

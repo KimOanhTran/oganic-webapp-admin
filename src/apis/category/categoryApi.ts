@@ -1,4 +1,3 @@
-
 import axiosClient from "../axiosClient";
 import { ReturnReponse } from "../response.interface";
 
@@ -21,9 +20,9 @@ const categoryApi = {
     return axiosClient.put(url, data);
   },
 
-  editDiscountCategory(payload:any): Promise<ReturnReponse<any>> {
-    const url = '/discount/edit'; //params : page, filter
-    return axiosClient.put(url,payload);
+  editDiscountCategory(payload: any): Promise<ReturnReponse<any>> {
+    const url = "/discount/edit"; //params : page, filter
+    return axiosClient.put(url, payload);
   },
 
   deleteCategory(data: any): Promise<ReturnReponse<any>> {

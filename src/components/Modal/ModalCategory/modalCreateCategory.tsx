@@ -15,10 +15,11 @@ export default function ModalCreateCategory({
     slug: string;
   };
 
-  const [category, setCategory] = useState("");
-  const [imagesBase64, setImagesBase64] = useState<any>("");
-  const [iconBase64, setIconBase64] = useState<any>("");
+  const [category, setCategory] = useState(""); //Biến trạng thái lưu trữ tên danh mục sản phẩm
+  const [imagesBase64, setImagesBase64] = useState<any>(""); // Biến trạng thái lưu trữ hình ảnh của danh mục sp dưới dạng chuỗi base64
+  const [iconBase64, setIconBase64] = useState<any>(""); //Biến dạng trạng thái lưu trữ biểu tượng của danh mục sản phẩm dưới dạng chuỗi base64
 
+  //Hàm này chuyển đổi file hình ảnh sang chuỗi base64 và gọi hàm cb để lưu trữ kết quả
   const getBase64 = (file: any, cb: any) => {
     let reader = new FileReader();
     reader.readAsDataURL(file);
@@ -35,8 +36,9 @@ export default function ModalCreateCategory({
     handleSubmit,
     formState: { errors },
     reset,
-  } = useForm<FormValues>({});
+  } = useForm<FormValues>({}); //useForm để quản lí biểu mẫu và xác thực dữ liệu
 
+  //Xử lý việc gửi dữ liệu đăng ký danh mục sản phẩm mới lên server sau khi người dùng nhấn nút 'Submit'
   const submit = async (data: any, e: any) => {
     e.preventDefault();
 

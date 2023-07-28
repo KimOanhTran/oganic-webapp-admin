@@ -1,76 +1,104 @@
 import { PlusSquareOutlined } from "@ant-design/icons";
 import React, { useEffect, useState } from "react";
-import categoryApi from "../../apis/category/categoryApi";
 import { IResUserList } from "../../apis/user/user.type";
-import ModalCreateCategory from "../../components/Modal/ModalCategory/modalCreateCategory";
-import ModalDiscountCategory from "../../components/Modal/ModalCategory/modalCreateDiscountCategory";
-import ModalUpdateCategory from "../../components/Modal/ModalCategory/modalUpdateCategory";
+import supplierApi from "../../apis/supplier/supplierApi";
+import ModalDiscountUser from "../../components/Modal/User/modalCreateDiscountCategory";
+import ModalSendMail from "../../components/Modal/User/modalSendmail";
+import ModelEditEmployee from "../../components/Modal/ModalEmployyeeAccount/modalEditEmployee";
 import Pagination from "../../components/Pangination/Pagination";
 import { USER_MODEL } from "../../models/user.model";
 import { notifyError, notifySuccess } from "../../utils/notify";
+import ModalRegiserEmployee from "../../components/Modal/ModalEmployyeeAccount/modalRegiserEmployee";
+import ModalCreate from "../../components/Modal/ModalSupplier/modalCreate";
 
 type Props = {};
-
-function Category(props: Props) {
+function Userlist(props: Props) {
   let newUserList = [];
   const LIMIT = 5;
   const total = 20;
   const [currentPage, setCurrentPage] = useState<number>(0);
-  const [showModalCreateCategory, setShowModalCreateCategory] = useState(false);
-  const [showModalUpdateCategory, setShowModalUpdateCategory] = useState(false);
-  const [showModalDiscountCategory, setShowModalDiscountCategory] =
+  const [supplierList, setSupplierList] = useState([]);
+  const [showModalEditEmployee, setShowModalEditEmployee] = useState(false);
+  const [showModal, setShowModal] = useState(false);
+  const [showModalRegisterEmployee, setShowModalRegisterEmployee] =
     useState(false);
-  const [categoryList, setCategoryList] = useState([]);
+  const [idUser, setIdUser] = useState("");
+  const [idUserSelect, setIdUserSelect] = useState("");
   const [searchItem, setSearchItem] = useState("");
-  const [idCategory, setIdCategory] = useState("");
-  const [idCategorySelect, setIdCategorySelect] = useState("");
   const [order, setOrder] = useState("ACS");
-  const [reLoad, setReload] = useState(0);
-
-  const handleRemove = (removeId: number) => {
-    newUserList = categoryList.filter(
-      (item: any, index: number) => item._id !== removeId
-    );
-    setCategoryList(newUserList);
-    notifySuccess("Success");
-  };
-
-  const handleGetIDProduct = (_id: any, idCategory: any) => {
-    setIdCategory(_id);
-    setIdCategorySelect(idCategory);
-    setShowModalUpdateCategory(true);
-  };
-
-  const handleGetIDCategory = (idCategory: any) => {
-    setIdCategorySelect(idCategory);
-    setShowModalDiscountCategory(true);
-  };
+  const [reload, setReload] = useState(0);
+  const [selectedId, setSelectedId] = useState<Array<any>>([]);
+  const [selectAll, setSelectAll] = useState(false);
 
   const sorting = (col: string) => {
     if (order === "ACS") {
-      const sorted = [...categoryList].sort((a: any, b: any) =>
-        a[col] > b[col] ? 1 : -1
+      const sorted = [...supplierList].sort((a: any, b: any) =>
+        a[col].toLowerCase() > b[col].toLowerCase() ? 1 : -1
       );
-      setCategoryList(sorted);
+      setSupplierList(sorted);
       setOrder("DCS");
     }
     if (order === "DCS") {
-      const sorted = [...categoryList].sort((a: any, b: any) =>
-        a[col] < b[col] ? 1 : -1
+      const sorted = [...supplierList].sort((a: any, b: any) =>
+        a[col].toLowerCase() < b[col].toLowerCase() ? 1 : -1
       );
-      setCategoryList(sorted);
+      setSupplierList(sorted);
       setOrder("ACS");
     }
   };
-  // Khi trang được hiển thị useEffect hook được gọi. Trong useEffect, một cuộc gọi API (categoryApi.getCategory()) được thực hiện để lấy danh sách danh mục sản phẩm.
-  //Kết quả được lưu vào biến 'categoryList thông quan hàm setCategoryList(result.data)
+  // console.log(searchItem)
+
+  const handleGetIDUser = (idUser: any) => {
+    console.log(idUser);
+    setIdUser(idUser);
+    setShowModalEditEmployee(true);
+  };
+
+  // const handleEnableUser = async (_id: any, enable: boolean) => {
+  //   const payload = {
+  //     _id: _id,
+  //     enable: !enable,
+  //   };
+
+  //   const result = await supplierList.enableUser(payload);
+  //   // console.log(payload);
+  //   // console.log(result);
+  //   if (result.msg == "Thành công ") {
+  //     notifySuccess("Success");
+  //     setReload(reload + 1);
+  //   } else notifyError("Fail");
+  // };
+
+  const handleCheck = (e: any, email: any) => {
+    const { checked } = e.target;
+    // console.log(checked, email);
+    if (checked) {
+      setSelectedId([...selectedId, email]);
+    } else {
+      setSelectedId(selectedId.filter((item: any) => item !== email));
+    }
+  };
+
+  const handleSelectAll = (e: any) => {
+    const { checked } = e.target;
+    if (checked) {
+      setSelectAll(true);
+      setSelectedId(supplierList.map((item: any) => item.email));
+    } else {
+      setSelectAll(false);
+      setSelectedId([]);
+    }
+  };
+
+  // console.log(selectedId);
+
   useEffect(() => {
     (async () => {
-      const result = await categoryApi.getCategory();
-      console.log(result);
-      setCategoryList(result.data);
+      const result = await supplierApi.getListSupplier();
+      // console.log(result);
+      setSupplierList(result.data);
     })();
-  }, [reLoad]);
+  }, [reload]);
 
   return (
     <div className="table w-full p-2 max-h-screen">
@@ -105,7 +133,7 @@ function Category(props: Props) {
         <div
           className="flex p-2 items-center gap-2 bg-green-600 ml-2 rounded-lg text-white w-[70px] cursor-pointer"
           onClick={() => {
-            setShowModalCreateCategory(true);
+            setShowModal(true);
           }}
         >
           <span className="block select-none">ADD</span>
@@ -122,15 +150,20 @@ function Category(props: Props) {
             <th className="p-2 border-r cursor-pointer text-sm font-thin text-gray-500">
               <div className="flex items-center justify-center">Name</div>
             </th>
-
+            <th className="p-2 border-r cursor-pointer text-sm font-thin text-gray-500">
+              <div className="flex items-center justify-center">Address</div>
+            </th>
+            <th className="p-2 border-r cursor-pointer text-sm font-thin text-gray-500">
+              <div className="flex items-center justify-center">Number</div>
+            </th>
             <th className="p-2 border-r cursor-pointer text-sm font-thin text-gray-500">
               <div className="flex items-center justify-center">Actions</div>
             </th>
           </tr>
         </thead>
         <tbody>
-          {categoryList?.length > 0 ? (
-            categoryList
+          {supplierList?.length > 0 ? (
+            supplierList
               .filter((value: any, index: number) => {
                 if (searchItem == "") {
                   return value;
@@ -147,10 +180,12 @@ function Category(props: Props) {
                 >
                   <td className="p-2 border-r">{index + 1}</td>
                   <td className="p-2 border-r">{item?.name}</td>
+                  <td className="p-2 border-r">{item?.phone}</td>
+                  <td className="p-2 border-r">{`${item?.address?.address}, ${item?.address?.district}, ${item?.address?.province}`}</td>
                   <td className="flex gap-4 justify-center">
                     <a
                       onClick={() => {
-                        handleGetIDProduct(item?.name, item?._id);
+                        // handleGetIDProduct(item?.name, item?._id);
                       }}
                       className="bg-blue-500 p-2 text-white hover:shadow-lg text-xs font-thin cursor-pointer"
                     >
@@ -158,7 +193,7 @@ function Category(props: Props) {
                     </a>
                     <a
                       onClick={() => {
-                        handleGetIDCategory(item?._id);
+                        // handleGetIDCategory(item?._id);
                       }}
                       className="bg-orange-500 p-2 text-white hover:shadow-lg text-xs font-thin cursor-pointer"
                     >
@@ -177,7 +212,10 @@ function Category(props: Props) {
           )}
         </tbody>
       </table>
-      {showModalCreateCategory && (
+      {showModal && (
+        <ModalCreate setOpenModal={setShowModal} setReload={setReload} />
+      )}
+      {/* {showModalCreateCategory && (
         <ModalCreateCategory
           setOpenModalCreateCategory={setShowModalCreateCategory}
           setReload={setReload}
@@ -196,8 +234,8 @@ function Category(props: Props) {
         <ModalDiscountCategory
           setOpenModalDiscountCategory={setShowModalDiscountCategory}
           _idCategory={idCategorySelect}
-        />
-      )}
+        /> */}
+      {/* )} */}
       {/* <Pagination
         limit={LIMIT}
         currentPage={currentPage}
@@ -208,4 +246,4 @@ function Category(props: Props) {
   );
 }
 
-export default Category;
+export default Userlist;
