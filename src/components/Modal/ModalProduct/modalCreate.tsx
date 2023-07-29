@@ -5,6 +5,7 @@ import { useForm } from "react-hook-form";
 import categoryApi from "../../../apis/category/categoryApi";
 import productApi from "../../../apis/product/product";
 import { notifyError, notifySuccess } from "../../../utils/notify";
+import supplierApi from "../../../apis/supplier/supplierApi";
 
 export default function ModalCreate({ setOpenModal, setReload }: any) {
   type FormValues = {
@@ -16,7 +17,7 @@ export default function ModalCreate({ setOpenModal, setReload }: any) {
   };
 
   const [flag, setFlag] = useState(false);
-  const [category, setCategory] = useState<Array<any>>([]);
+  const [supplier, setSupplier] = useState<Array<any>>([]);
   const [selectCategory, setSelectCategory] = useState("");
   const [specs, setSpecs] = useState<Array<any>>([]);
   const [imagesBase64, setImagesBase64] = useState<any>("");
@@ -29,7 +30,7 @@ export default function ModalCreate({ setOpenModal, setReload }: any) {
     formState: { errors },
     reset,
   } = useForm<FormValues>({});
-  
+
   const getBase64 = (file: any, cb: any) => {
     let reader = new FileReader();
     reader.readAsDataURL(file);
@@ -55,8 +56,6 @@ export default function ModalCreate({ setOpenModal, setReload }: any) {
     }
   };
   // console.log(category);
-
-
 
   const submit = async (data: any, e: any) => {
     e.preventDefault();
@@ -91,7 +90,7 @@ export default function ModalCreate({ setOpenModal, setReload }: any) {
 
     // console.log("payload", payload);
 
-    if(result.statusCode === 200) {
+    if (result.statusCode === 200) {
       notifySuccess("Create Success");
       setReload((ref: number) => ref + 1);
       setFlag(false);
@@ -104,8 +103,8 @@ export default function ModalCreate({ setOpenModal, setReload }: any) {
 
   useEffect(() => {
     (async () => {
-      const result = await categoryApi.getCategory();
-      setCategory(result.data);
+      const result = await supplierApi.getListSupplier();
+      setSupplier(result.data);
     })();
   }, []);
 
@@ -218,9 +217,9 @@ export default function ModalCreate({ setOpenModal, setReload }: any) {
                     onChange={handleSelectCat}
                   >
                     <option value="Select" key={-1}>
-                      Select:
+                      Select Supplier:
                     </option>
-                    {category.map((item: any, index: number) => (
+                    {supplier.map((item: any, index: number) => (
                       <option key={index} value={item.name}>
                         {item.name}
                       </option>
@@ -291,7 +290,7 @@ const ShowSpecs = ({ register, id, name, values }: Props) => {
       <div className="specs-input flex">
         <input
           //   {...register(`spec${id}`)}
-    
+
           type="text"
           value={name}
           disabled
