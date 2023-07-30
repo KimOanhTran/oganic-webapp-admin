@@ -7,7 +7,11 @@ import productApi from "../../../apis/product/product";
 import supplierApi from "../../../apis/supplier/supplierApi";
 import { notifyError, notifySuccess } from "../../../utils/notify";
 
-export default function ModalCreate({ setOpenModal, setReload }: any) {
+export default function ModalEdit({
+  setOpenModalEditSupplier,
+  reload,
+  _id,
+}: any) {
   type FormValues = {
     name: string;
     desc: string;
@@ -19,14 +23,9 @@ export default function ModalCreate({ setOpenModal, setReload }: any) {
       address: string;
     };
   };
-
   const [flag, setFlag] = useState(false);
-  const [supplier, setCategory] = useState<Array<any>>([]);
+  const [supplier, setSupplier] = useState<any>();
   const [selectCategory, setSelectCategory] = useState("");
-  const [specs, setSpecs] = useState<Array<any>>([]);
-  const [imagesBase64, setImagesBase64] = useState<any>("");
-  const [selectValue, setSelectValue] = useState([]);
-
   const {
     register,
     handleSubmit,
@@ -35,64 +34,79 @@ export default function ModalCreate({ setOpenModal, setReload }: any) {
     reset,
   } = useForm<FormValues>({});
 
-  const handleSelectCat = (e: any) => {
-    if (e.target.value !== "Select") {
-      setSelectCategory(e.target.value);
-      (async () => {
-        const result = await categoryApi.getSelectCategory(e.target.value);
-        setSpecs(result.data.specsModel);
-        // console.log(result.data.specsModel);
-        setFlag(true);
-      })();
-    } else {
-      setFlag(false);
-    }
-  };
-  // console.log(category);
+  useEffect(() => {
+    (async () => {
+      const resultSupplier = await supplierApi.getASupplier(_id);
+      console.log(resultSupplier);
+      setSupplier(resultSupplier);
+    })();
+  }, []);
 
   const submit = async (data: any, e: any) => {
     e.preventDefault();
+    const name = data.name === "" ? supplier?.name || "" : data.name;
+    console.log(name);
+
+    // Kiểm tra và gán giá trị cho desc
+    const desc = data.desc === "" ? supplier?.desc || "" : data.desc;
+
+    // Kiểm tra và gán giá trị cho slug
+    const slug = data.slug === "" ? supplier?.slug || "" : data.slug;
+    // Kiểm tra và gán giá trị cho phone
+    const phone = data.phone === "" ? supplier?.phone || "" : data.phone;
+
+    // Kiểm tra và gán giá trị cho address.province
+    const province =
+      data.address.province.trim() === ""
+        ? supplier?.address.province || ""
+        : data.address.province;
+
+    // Kiểm tra và gán giá trị cho address.district
+    const district =
+      data.address.district.trim() === ""
+        ? supplier?.address.district || ""
+        : data.address.district;
+
+    // Kiểm tra và gán giá trị cho address.address
+    const address =
+      data.address.address.trim() === ""
+        ? supplier?.address.address || ""
+        : data.address.address;
+
     const payload = {
-      name: data.name,
-      desc: data.desc,
-      slug: data.slug,
-      phone: data.phone,
+      name: name,
+      desc: desc,
+      slug: slug,
+      phone: phone,
       address: {
-        province: data.province,
-        district: data.district,
-        address: data.address,
+        province: province,
+        district: district,
+        address: address,
       },
     };
 
-    const result = await supplierApi.createSupplier(payload);
+    const result = await supplierApi.editSupplier(_id, payload);
     console.log("resultApi", result);
 
-    // console.log("payload", payload);
+    console.log("statust", result.statusCode);
 
-    if (result.statusCode === 200) {
-      notifySuccess("Create Success");
-      setReload((ref: number) => ref + 1);
+    if (result.msg === "Thành công") {
+      notifySuccess("Update Success");
+      reload((ref: number) => ref + 1);
       setFlag(false);
       reset();
     } else {
-      notifyError("Create Fail");
+      notifyError("Update Fail");
     }
     return;
   };
-
-  useEffect(() => {
-    (async () => {
-      const result = await categoryApi.getCategory();
-      setCategory(result.data);
-    })();
-  }, []);
 
   return (
     <>
       <div className="fixed inset-0 z-10 overflow-y-auto">
         <div
           className="fixed inset-0 w-full h-full bg-black opacity-40"
-          onClick={() => setOpenModal(false)}
+          onClick={() => setOpenModalEditSupplier(false)}
         ></div>
         <div className="flex items-center min-h-screen px-4 py-8">
           <div className="relative w-full max-w-[800px] p-4 mx-auto bg-white rounded-md shadow-lg">
@@ -106,10 +120,11 @@ export default function ModalCreate({ setOpenModal, setReload }: any) {
                     <div className="">Name: </div>
                     <input
                       {...register("name")}
-                      required
                       className="shadow appearance-none border rounded py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline mx-9"
-                      id="username"
+                      id="name"
                       type="text"
+                      defaultValue={supplier?.name}
+                      onChange={(e) => setValue("name", e.target.value)}
                       placeholder="Supplier Name"
                     />
                   </div>
@@ -117,10 +132,11 @@ export default function ModalCreate({ setOpenModal, setReload }: any) {
                     <div className="">slug: </div>
                     <input
                       {...register("slug")}
-                      required
                       className="shadow appearance-none border rounded py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline mx-9"
                       id="slug"
                       type="text"
+                      defaultValue={supplier?.slug}
+                      onChange={(e) => setValue("slug", e.target.value)}
                       placeholder="Slug"
                     />
                   </div>
@@ -128,10 +144,11 @@ export default function ModalCreate({ setOpenModal, setReload }: any) {
                     <div className="">Phone: </div>
                     <input
                       {...register("phone")}
-                      required
                       className="shadow appearance-none border rounded py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline mx-9"
                       id="phone"
                       type="text"
+                      defaultValue={supplier?.phone}
+                      onChange={(e) => setValue("phone", e.target.value)}
                       placeholder="phone"
                     />
                   </div>
@@ -146,8 +163,9 @@ export default function ModalCreate({ setOpenModal, setReload }: any) {
                     </label>
                     <textarea
                       {...register("desc")}
-                      id="message"
+                      id="desc"
                       rows={4}
+                      defaultValue={supplier?.desc}
                       className="block shadow p-2.5 w-full text-sm text-gray-900  rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500 resize-none"
                       placeholder="Write your description here..."
                     ></textarea>
@@ -159,26 +177,35 @@ export default function ModalCreate({ setOpenModal, setReload }: any) {
                   <div className="">Address: </div>
                   <input
                     {...register("address.province")}
-                    required
                     className="shadow appearance-none border rounded py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                    id="username"
+                    id="province"
                     type="text"
+                    defaultValue={supplier?.address?.province}
+                    onChange={(e) =>
+                      setValue("address.province", e.target.value)
+                    }
                     placeholder="province"
                   />
                   <input
                     {...register("address.district")}
-                    required
                     className="shadow appearance-none border rounded py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                    id="username"
+                    id="district"
                     type="text"
+                    defaultValue={supplier?.address?.district}
+                    onChange={(e) =>
+                      setValue("address.district", e.target.value)
+                    }
                     placeholder="distric"
                   />
                   <input
                     {...register("address.address")}
-                    required
                     className="shadow appearance-none border rounded py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                    id="username"
+                    id="address"
                     type="text"
+                    defaultValue={supplier?.address?.address}
+                    onChange={(e) =>
+                      setValue("address.address", e.target.value)
+                    }
                     placeholder="address"
                   />
                 </div>
@@ -196,64 +223,3 @@ export default function ModalCreate({ setOpenModal, setReload }: any) {
     </>
   );
 }
-
-type Props = {
-  register: any;
-  id: number;
-  name: string;
-  values: any;
-};
-
-const SpecsCategory = ({
-  register,
-  listSpecs,
-  setValue,
-}: {
-  register: any;
-  setValue: any;
-  listSpecs: any;
-}) => {
-  return (
-    <div className="flex flex-col gap-[10px]">
-      {listSpecs.map((item: any, index: any) => {
-        setValue(`spec${index + 1}`, item.name);
-        return (
-          <ShowSpecs
-            register={register}
-            id={index + 1}
-            key={index}
-            name={item.name}
-            values={item.values}
-          />
-        );
-      })}
-    </div>
-  );
-};
-
-const ShowSpecs = ({ register, id, name, values }: Props) => {
-  return (
-    <div className="formInput flex flex-col gap-[5px]">
-      <div className="specs-input flex">
-        <input
-          //   {...register(`spec${id}`)}
-
-          type="text"
-          value={name}
-          disabled
-          placeholder="Name Spec"
-        />
-        <div className="select">
-          <select {...register(`value${id}`)} className="flex w-[250px]">
-            <option value={""}>Chọn</option>
-            {values.map((item: any, index: any) => (
-              <option key={index} value={item.value}>
-                {item.value}
-              </option>
-            ))}
-          </select>
-        </div>
-      </div>
-    </div>
-  );
-};

@@ -10,6 +10,8 @@ import { USER_MODEL } from "../../models/user.model";
 import { notifyError, notifySuccess } from "../../utils/notify";
 import ModalRegiserEmployee from "../../components/Modal/ModalEmployyeeAccount/modalRegiserEmployee";
 import ModalCreate from "../../components/Modal/ModalSupplier/modalCreate";
+import ModalEdit from "../../components/Modal/ModalSupplier/modalEdit";
+import ModalDelete from "../../components/Modal/ModalSupplier/modalDelete";
 
 type Props = {};
 function Userlist(props: Props) {
@@ -18,11 +20,13 @@ function Userlist(props: Props) {
   const total = 20;
   const [currentPage, setCurrentPage] = useState<number>(0);
   const [supplierList, setSupplierList] = useState([]);
-  const [showModalEditEmployee, setShowModalEditEmployee] = useState(false);
+  const [showModalEditSupplier, setShowModalEditSupplier] = useState(false);
+  const [showModalDeleteSupplier, setShowModalDeleteSupplier] = useState(false);
+
   const [showModal, setShowModal] = useState(false);
   const [showModalRegisterEmployee, setShowModalRegisterEmployee] =
     useState(false);
-  const [idUser, setIdUser] = useState("");
+  const [idSupplier, setIdSupplier] = useState("");
   const [idUserSelect, setIdUserSelect] = useState("");
   const [searchItem, setSearchItem] = useState("");
   const [order, setOrder] = useState("ACS");
@@ -48,10 +52,16 @@ function Userlist(props: Props) {
   };
   // console.log(searchItem)
 
-  const handleGetIDUser = (idUser: any) => {
-    console.log(idUser);
-    setIdUser(idUser);
-    setShowModalEditEmployee(true);
+  const handleGetIDSupplier = (idSupplier: any) => {
+    console.log(idSupplier);
+    setIdSupplier(idSupplier);
+    setShowModalEditSupplier(true);
+  };
+
+  const handleDelete = (idSupplier: any) => {
+    console.log(idSupplier);
+    setIdSupplier(idSupplier);
+    setShowModalDeleteSupplier(true);
   };
 
   // const handleEnableUser = async (_id: any, enable: boolean) => {
@@ -185,7 +195,7 @@ function Userlist(props: Props) {
                   <td className="flex gap-4 justify-center">
                     <a
                       onClick={() => {
-                        // handleGetIDProduct(item?.name, item?._id);
+                        handleGetIDSupplier(item?._id);
                       }}
                       className="bg-blue-500 p-2 text-white hover:shadow-lg text-xs font-thin cursor-pointer"
                     >
@@ -193,11 +203,11 @@ function Userlist(props: Props) {
                     </a>
                     <a
                       onClick={() => {
-                        // handleGetIDCategory(item?._id);
+                        handleDelete(item?._id);
                       }}
                       className="bg-orange-500 p-2 text-white hover:shadow-lg text-xs font-thin cursor-pointer"
                     >
-                      Discount
+                      Delete
                     </a>
                     {/* <a className="bg-red-500 p-2 text-white hover:shadow-lg text-xs font-thin cursor-pointer">
                       <span onClick={() => handleRemove(item?._id)}>Remove</span>
@@ -212,8 +222,24 @@ function Userlist(props: Props) {
           )}
         </tbody>
       </table>
+
       {showModal && (
         <ModalCreate setOpenModal={setShowModal} setReload={setReload} />
+      )}
+      {showModalEditSupplier && (
+        <ModalEdit
+          setOpenModalEditSupplier={setShowModalEditSupplier}
+          _id={idSupplier}
+          reload={setReload}
+        />
+      )}
+
+      {showModalDeleteSupplier && (
+        <ModalDelete
+          setOpenModalDeleteSupplier={setShowModalDeleteSupplier}
+          _id={idSupplier}
+          reload={setReload}
+        />
       )}
       {/* {showModalCreateCategory && (
         <ModalCreateCategory
@@ -221,14 +247,7 @@ function Userlist(props: Props) {
           setReload={setReload}
         />
       )}
-      {showModalUpdateCategory && (
-        <ModalUpdateCategory
-          setOpenModalUpdateCategory={setShowModalUpdateCategory}
-          _id={idCategory}
-          idCategory={idCategorySelect}
-          setReload={setReload}
-        />
-      )}
+
 
       {showModalDiscountCategory && (
         <ModalDiscountCategory

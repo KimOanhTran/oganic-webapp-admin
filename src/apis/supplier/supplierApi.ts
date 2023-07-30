@@ -7,7 +7,7 @@ const supplierApi = {
     return axiosClient.get(url);
   },
   getASupplier(_id: any): Promise<ReturnReponse<any>> {
-    const url = `/supplier/${_id}`; //params : page, filter
+    const url = `/supplier/getASupplier/${_id}`; //params : page, filter
     return axiosClient.get(url);
   },
   createSupplier(data: any): Promise<ReturnReponse<any>> {
@@ -15,11 +15,11 @@ const supplierApi = {
     return axiosClient.post(url, data);
   },
   editSupplier(_id: any, payLoad: any): Promise<ReturnReponse<any>> {
-    const url = `/supplier/edit?${_id}`; //params : page, filter
+    const url = `/supplier/edit/${_id}`; //params : page, filter
     return axiosClient.patch(url, payLoad);
   },
   deleteSupplier(_id: any): Promise<ReturnReponse<any>> {
-    const url = `/supplier/delete?${_id}`; //params : page, filter
+    const url = `/supplier/delete/${_id}`; //params : page, filter
     return axiosClient.delete(url);
   },
 };
