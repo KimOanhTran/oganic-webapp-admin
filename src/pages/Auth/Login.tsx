@@ -21,7 +21,15 @@ const Login = (props: Props) => {
 
   const login = async (params: IReqLogin) => {
     const result = await authApi.login(params);
-
+    console.log(result);
+    if (result.error == true) {
+      notifyError("Invalid email or password");
+      return;
+    }
+    if (result.data.user.enable === false) {
+      notifyError("Account blocked");
+      return;
+    }
     if (result.data.user.role === "Admin") {
       saveToLocalStorage("token", result.data.tokens.access.token);
       dispatch(updateAuthStatus(true));
