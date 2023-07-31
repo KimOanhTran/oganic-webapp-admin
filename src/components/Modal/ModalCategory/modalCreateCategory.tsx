@@ -185,32 +185,5 @@ const ExtendableInputs = ({ register }: { register: any }) => {
   const handleAddInput = () => setInputCount(inputCount + 1);
   const handleSubInput = () => setInputCount(inputCount - 1);
 
-  return (
-    <>
-      <div className="flex flex-col items-center mb-[30px] gap-[10px]">
-        <label>Specifications</label>
-        {[...Array(inputCount)].map((_, index) => (
-          <Specs register={register} id={index + 1} key={index} />
-        ))}
-        {/* <Specs /> */}
-        <div className="flex gap-[30px]">
-          <button
-            className="w-[100px] p-2 rounded-sm text-center bg-green-500  text-white"
-            type="button"
-            onClick={handleAddInput}
-          >
-            Add
-          </button>
-          <button
-            className="w-[100px] p-2 rounded-sm text-center bg-red-500  text-white"
-            type="button"
-            disabled={inputCount === 0}
-            onClick={handleSubInput}
-          >
-            Remove
-          </button>
-        </div>
-      </div>
-    </>
-  );
+  return <></>;
 };

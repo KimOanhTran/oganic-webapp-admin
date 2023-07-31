@@ -137,9 +137,11 @@ function DiscountList(props: Props) {
             <th className="p-2 border-r cursor-pointer text-sm font-thin text-gray-500">
               <div className="flex items-center justify-center">Is Percent</div>
             </th>
-            <th className="p-2 border-r cursor-pointer text-sm font-thin text-gray-500">
-              <div className="flex items-center justify-center">is Ship</div>
-            </th>
+            {/* <th className="p-2 border-r cursor-pointer text-sm font-thin text-gray-500">
+              <div className="flex items-center justify-center hidden">
+                is Ship
+              </div>
+            </th> */}
             <th className="p-2 border-r cursor-pointer text-sm font-thin text-gray-500">
               <div className="flex items-center justify-center">
                 Max Discount
@@ -192,7 +194,9 @@ function DiscountList(props: Props) {
                   <td className="p-2 border-r">
                     {item?.is_percent.toString()}
                   </td>
-                  <td className="p-2 border-r">{item?.is_ship.toString()}</td>
+                  <td className="p-2 border-r hidden">
+                    {item?.is_ship.toString()}
+                  </td>
                   <td className="p-2 border-r">
                     {moneyFormater(item?.maxPrice)}
                   </td>

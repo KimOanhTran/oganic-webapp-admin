@@ -161,10 +161,10 @@ export default function ModalAddDiscount({
                     </select>
                   </div>
 
-                  <div className="flex items-center gap-4 mb-2  ">
+                  <div className="flex items-center gap-4 mb-2  hidden">
                     <label
                       htmlFor="countries_disabled"
-                      className="block w-[200px] text-sm font-medium text-gray-900 dark:text-black"
+                      className="block w-[200px] text-sm font-medium text-gray-900 dark:text-black hidden"
                     >
                       Ship type
                     </label>

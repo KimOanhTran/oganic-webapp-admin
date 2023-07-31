@@ -8,6 +8,7 @@ import ModalUpdateCategory from "../../components/Modal/ModalCategory/modalUpdat
 import Pagination from "../../components/Pangination/Pagination";
 import { USER_MODEL } from "../../models/user.model";
 import { notifyError, notifySuccess } from "../../utils/notify";
+import ModalDelete from "../../components/Modal/ModalCategory/modalDelete";
 
 type Props = {};
 
@@ -20,7 +21,9 @@ function Category(props: Props) {
   const [showModalUpdateCategory, setShowModalUpdateCategory] = useState(false);
   const [showModalDiscountCategory, setShowModalDiscountCategory] =
     useState(false);
+  const [showModalDeleteCategory, setShowModalDeleteCategory] = useState(false);
   const [categoryList, setCategoryList] = useState([]);
+  const [category, setCategory] = useState([]);
   const [searchItem, setSearchItem] = useState("");
   const [idCategory, setIdCategory] = useState("");
   const [idCategorySelect, setIdCategorySelect] = useState("");
@@ -41,9 +44,12 @@ function Category(props: Props) {
     setShowModalUpdateCategory(true);
   };
 
-  const handleGetIDCategory = (idCategory: any) => {
+  const handleGetIDCategory = async (idCategory: any) => {
     setIdCategorySelect(idCategory);
-    setShowModalDiscountCategory(true);
+    const result = await categoryApi.getSelectCategory(idCategory);
+    console.log(result.data);
+    setCategory(result.data);
+    setShowModalDeleteCategory(true);
   };
 
   const sorting = (col: string) => {
@@ -68,6 +74,7 @@ function Category(props: Props) {
     (async () => {
       const result = await categoryApi.getCategory();
       console.log(result);
+
       setCategoryList(result.data);
     })();
   }, [reLoad]);
@@ -162,7 +169,7 @@ function Category(props: Props) {
                       }}
                       className="bg-orange-500 p-2 text-white hover:shadow-lg text-xs font-thin cursor-pointer"
                     >
-                      Discount
+                      Delete
                     </a>
                     {/* <a className="bg-red-500 p-2 text-white hover:shadow-lg text-xs font-thin cursor-pointer">
                       <span onClick={() => handleRemove(item?._id)}>Remove</span>
@@ -196,6 +203,14 @@ function Category(props: Props) {
         <ModalDiscountCategory
           setOpenModalDiscountCategory={setShowModalDiscountCategory}
           _idCategory={idCategorySelect}
+        />
+      )}
+
+      {showModalDeleteCategory && (
+        <ModalDelete
+          setOpenModalDeleteCategory={setShowModalDeleteCategory}
+          category={category}
+          reload={setReload}
         />
       )}
       {/* <Pagination
