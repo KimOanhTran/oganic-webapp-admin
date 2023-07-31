@@ -18,6 +18,7 @@ export default function ModalCreate({ setOpenModal, setReload }: any) {
 
   const [flag, setFlag] = useState(false);
   const [supplier, setSupplier] = useState<Array<any>>([]);
+  const [category, setCategory] = useState<Array<any>>([]);
   const [selectCategory, setSelectCategory] = useState("");
   const [specs, setSpecs] = useState<Array<any>>([]);
   const [imagesBase64, setImagesBase64] = useState<any>("");
@@ -103,8 +104,10 @@ export default function ModalCreate({ setOpenModal, setReload }: any) {
 
   useEffect(() => {
     (async () => {
-      const result = await supplierApi.getListSupplier();
-      setSupplier(result.data);
+      // const result = await supplierApi.getListSupplier();
+      // setSupplier(result.data);
+      const result = await categoryApi.getCategory();
+      setCategory(result.data);
     })();
   }, []);
 
@@ -217,9 +220,9 @@ export default function ModalCreate({ setOpenModal, setReload }: any) {
                     onChange={handleSelectCat}
                   >
                     <option value="Select" key={-1}>
-                      Select Supplier:
+                      Select:
                     </option>
-                    {supplier.map((item: any, index: number) => (
+                    {category.map((item: any, index: number) => (
                       <option key={index} value={item.name}>
                         {item.name}
                       </option>
