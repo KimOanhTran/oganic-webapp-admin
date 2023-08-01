@@ -9,6 +9,8 @@ import { USER_MODEL } from "../../models/user.model";
 import { formatDate } from "../../utils/dateFormater";
 import { moneyFormater } from "../../utils/moneyFormater";
 import { notifyError, notifySuccess } from "../../utils/notify";
+import ModalDelete from "../../components/Modal/Modaldiscout/modalDelete";
+import ModalEditDiscount from "../../components/Modal/Modaldiscout/modalEditDiscount";
 
 type Props = {};
 
@@ -18,15 +20,29 @@ function DiscountList(props: Props) {
   const total = 20;
   const [currentPage, setCurrentPage] = useState<number>(0);
   const [searchItem, setSearchItem] = useState("");
+  const [idDiscount, setIdDiscount] = useState("");
+
   const [order, setOrder] = useState("ACS");
   const [showModalDiscount, setShowModalDiscount] = useState(false);
+  const [showModalDeleteDiscount, setShowModalDeleteDiscount] = useState(false);
+  const [showModalEditDiscount, setShowModalEditDiscount] = useState(false);
+
   const [reload, setReload] = useState(0);
 
   const [discountList, setDiscountList] = useState([]);
+  const [discount, setDiscount] = useState({ code: "", id: "" });
 
-  const handleRemove = (removeId: number) => {
-    newUserList = discountList.filter((item: any) => item.id !== removeId);
-    setDiscountList(newUserList);
+  const handleRemove = (removeId: any, code: any) => {
+    // newUserList = discountList.filter((item: any) => item.id !== removeId);
+    // setDiscountList(newUserList);
+    console.log(removeId);
+    setIdDiscount(removeId);
+    const payload = {
+      code: code,
+      id: removeId,
+    };
+    setDiscount(payload);
+    setShowModalDeleteDiscount(true);
   };
 
   const sorting = (col: string) => {
@@ -68,6 +84,11 @@ function DiscountList(props: Props) {
       setDiscountList(result.data);
     })();
   }, [reload]);
+
+  const handleEdit = async (idDiscount: any) => {
+    console.log(idDiscount);
+    setIdDiscount(idDiscount), setShowModalEditDiscount(true);
+  };
 
   return (
     <div className="table w-full p-2 max-h-screen">
@@ -137,9 +158,11 @@ function DiscountList(props: Props) {
             <th className="p-2 border-r cursor-pointer text-sm font-thin text-gray-500">
               <div className="flex items-center justify-center">Is Percent</div>
             </th>
-            <th className="p-2 border-r cursor-pointer text-sm font-thin text-gray-500">
-              <div className="flex items-center justify-center">is Ship</div>
-            </th>
+            {/* <th className="p-2 border-r cursor-pointer text-sm font-thin text-gray-500">
+              <div className="flex items-center justify-center hidden">
+                is Ship
+              </div>
+            </th> */}
             <th className="p-2 border-r cursor-pointer text-sm font-thin text-gray-500">
               <div className="flex items-center justify-center">
                 Max Discount
@@ -192,12 +215,14 @@ function DiscountList(props: Props) {
                   <td className="p-2 border-r">
                     {item?.is_percent.toString()}
                   </td>
-                  <td className="p-2 border-r">{item?.is_ship.toString()}</td>
+                  <td className="p-2 border-r hidden">
+                    {item?.is_ship.toString()}
+                  </td>
                   <td className="p-2 border-r">
                     {moneyFormater(item?.maxPrice)}
                   </td>
                   <td className="p-2 border-r">
-                    {moneyFormater(item?.maxPrice)}
+                    {moneyFormater(item?.minPrice)}
                   </td>
                   <td className="p-2 border-r">{item?.quantity}</td>
                   <td className="p-2 border-r">
@@ -218,9 +243,14 @@ function DiscountList(props: Props) {
                     >
                       {item?.enable === false ? "Enable" : "Disable"}
                     </a>
-                    {/* <a className="bg-red-500 p-2 text-white hover:shadow-lg text-xs font-thin cursor-pointer">
-                      <span onClick={() => handleRemove(item.id)}>Remove</span>
-                    </a> */}
+                    <a className="bg-red-500 p-2 text-white hover:shadow-lg text-xs font-thin cursor-pointer">
+                      <span onClick={() => handleRemove(item?._id, item?.code)}>
+                        Remove
+                      </span>
+                    </a>
+                    <a className="bg-red-500 p-2 text-white hover:shadow-lg text-xs font-thin cursor-pointer">
+                      <span onClick={() => handleEdit(item?._id)}>Edit</span>
+                    </a>
                   </td>
                 </tr>
               ))
@@ -237,12 +267,22 @@ function DiscountList(props: Props) {
           reload={setReload}
         />
       )}
-      {/* <Pagination
-        limit={LIMIT}
-        currentPage={currentPage}
-        setCurrentPage={setCurrentPage}
-        total={total}
-      /> */}
+
+      {showModalDeleteDiscount && (
+        <ModalDelete
+          setOpenModalDeleteDiscount={setShowModalDeleteDiscount}
+          discount={discount}
+          reload={setReload}
+        />
+      )}
+
+      {showModalEditDiscount && (
+        <ModalEditDiscount
+          setOpenModalEditEmployee={setShowModalEditDiscount}
+          _idDiscountr={idDiscount}
+          reload={setReload}
+        />
+      )}
     </div>
   );
 }

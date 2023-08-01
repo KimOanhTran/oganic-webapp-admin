@@ -12,9 +12,17 @@ const discountApi = {
     return axiosClient.get(url);
   },
 
-  eidtDiscount(payload:any): Promise<ReturnReponse<any>> {
-    const url = '/discount/edit'; //params : page, filter
-    return axiosClient.put(url,payload);
+  eidtDiscount(payload: any): Promise<ReturnReponse<any>> {
+    const url = "/discount/edit"; //params : page, filter
+    return axiosClient.put(url, payload);
+  },
+  deleteDiscount(payload: any): Promise<ReturnReponse<any>> {
+    const url = "/discount/delete"; //params : page, filter
+    return axiosClient.post(url, payload);
+  },
+  getADiscount(idDiscount: any): Promise<ReturnReponse<any>> {
+    const url = `/discount/getADiscount/${idDiscount}`; //params : page, filter
+    return axiosClient.get(url);
   },
 };
 

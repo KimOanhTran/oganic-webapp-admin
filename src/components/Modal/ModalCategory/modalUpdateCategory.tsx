@@ -60,6 +60,7 @@ export default function ModalUpdateCategory({
     let specs_model: any[] = [];
 
     let newArray: any[] = [];
+
     arr1.forEach((item, index) => {
       item.includes("name") ? name.push(arr2[index]) : temp.push(arr2[index]);
     });
@@ -75,6 +76,7 @@ export default function ModalUpdateCategory({
         specs_model.push(obj);
       }
     });
+
     data.specsModel = specs_model;
 
     const payload = {
@@ -116,6 +118,7 @@ export default function ModalUpdateCategory({
       const result = await categoryApi.getSelectCategory(_id);
       //   console.log('123',result);
       setCategory(result.data);
+      console.log(result.data);
       toDataUrl(result.data.image_url, function (res: any) {
         const base64 = res.split(",");
         setImagesBase64(base64[1]);
@@ -243,6 +246,8 @@ const ListCategory = ({
   list: any;
   setValue: any;
 }) => {
+  const [showForm, setShowForm] = useState(true);
+
   useEffect(() => {
     if (list) {
       list.map((item: any, index: number) => {
@@ -253,35 +258,40 @@ const ListCategory = ({
 
         setValue(`values_${index}`, specs.join(";"));
         item.specs = specs.join(";");
+        console.log(item.specs);
       });
     }
   }, [list]);
   //   console.log("list", list);
   return (
     <div className="flex flex-col items-center">
-      <label>Specs</label>
-      {list &&
-        list.map((item: any, index: any) => (
-          <div key={index} className="formInput">
-            <div className="specs-input flex items-center justify-center">
-              <input
-                {...register(`name_${index}`)}
-                required
-                style={{ width: "190px" }}
-                type="text"
-                defaultValue={item.name}
-                placeholder="Name Spec"
-              />
-              <textarea
-                className="h-10 pt-2 resize-none"
-                style={{ width: "230px" }}
-                {...register(`values_${index}`)}
-                defaultValue={item.specs}
-                placeholder="Value"
-              />
-            </div>
-          </div>
-        ))}
+      {/* <label>Specs</label> */}
+      {showForm && (
+        <div>
+          {list &&
+            list.map((item: any, index: any) => (
+              <div key={index} className="formInput">
+                <div className="specs-input flex items-center justify-center hidden ">
+                  <input
+                    {...register(`name_${index}`)}
+                    style={{ width: "190px" }}
+                    type="text"
+                    defaultValue={item.name}
+                    placeholder="Name Spec"
+                  />
+                  <textarea
+                    className="h-10 pt-2 resize-none"
+                    style={{ width: "230px" }}
+                    {...register(`values_${index}`)}
+                    defaultValue={item.specs}
+                    placeholder="Value"
+                  />
+                </div>
+              </div>
+            ))}
+        </div>
+      )}
+
       <ExtendableInputs register={register} initialLength={list?.length || 0} />
     </div>
   );
@@ -313,24 +323,6 @@ const ExtendableInputs = ({
       </div>
 
       {/* <Specs /> */}
-      <div>
-        <button
-          className="p-4 bg-green-500 rounded-md text-white"
-          type="button"
-          onClick={handleAddInput}
-        >
-          Thêm
-        </button>
-        <button
-          className="p-4 bg-red-500 rounded-md text-white"
-          style={{ marginLeft: "20px" }}
-          type="button"
-          disabled={inputCount === 0}
-          onClick={handleSubInput}
-        >
-          Xóa
-        </button>
-      </div>
     </div>
   );
 };

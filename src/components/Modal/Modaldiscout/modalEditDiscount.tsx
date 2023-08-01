@@ -5,8 +5,9 @@ import { useForm } from "react-hook-form";
 import discountApi from "../../../apis/discount/discount.api";
 import { notifyError, notifySuccess } from "../../../utils/notify";
 
-export default function ModalAddDiscount({
-  setShowModalDiscount,
+export default function ModalEditDiscount({
+  setOpenModalEditEmployee,
+  _idDiscountr,
   reload,
 }: any) {
   const {
@@ -15,33 +16,131 @@ export default function ModalAddDiscount({
     formState: { errors },
     reset,
   } = useForm<any>({});
+  const [flag, setFlag] = useState(false);
+  const [discount, setDiscount] = useState<any>();
+  const [enableValue, setEnableValue] = useState<string | undefined>(
+    discount?.enable.toString()
+  );
+  const [ispercentValue, setIsPercentValue] = useState<string | undefined>(
+    discount?.is_percent.toString()
+  );
+  const [isShipValue, setIsShipValue] = useState<string | undefined>(
+    discount?.is_ship.toString()
+  );
+  const [isOidValue, setIsOidValue] = useState<string | undefined>(
+    discount?.is_oid.toString()
+  );
+  const [isOicValue, setIsOicValue] = useState<string | undefined>(
+    discount?.is_oic.toString()
+  );
+  useEffect(() => {
+    // Sử dụng 1 biến tạm để lưu trữ giá trị khi tải dữ liệu từ server
+    let isMounted = true;
 
-  const submit = async (data: any, e: any) => {
-    e.preventDefault();
-    const payload = {
-      code: data.code,
-      enable: Boolean(data.enable),
-      dateEnd: data.dateEnd,
-      dateStart: data.dateStart,
-      quantity: Number(data.quantity),
-      minPrice: Number(data.minPrice),
-      maxPrice: Number(data.maxPrice),
-      is_percent: Boolean(data.is_percent),
-      is_ship: Boolean(data.is_ship),
-      is_oic: Boolean(data.is_oic),
-      is_oid: Boolean(data.is_oid),
-      value: Number(data.value),
+    // Hàm async tự gọi của useEffect
+    const fetchData = async () => {
+      try {
+        const resultDiscount = await discountApi.getADiscount(_idDiscountr);
+
+        // Kiểm tra nếu component vẫn được mounted thì cập nhật trạng thái
+        if (isMounted) {
+          setEnableValue(resultDiscount.enable.toString());
+          setIsPercentValue(resultDiscount.is_percent.toString());
+          setIsShipValue(resultDiscount.is_ship.toString());
+          setIsOidValue(resultDiscount.is_oid.toString());
+          setIsOicValue(resultDiscount.is_oic.toString());
+          setDiscount(resultDiscount);
+        }
+      } catch (error) {
+        console.error("Error fetching data: ", error);
+      }
     };
 
-    // console.log(payload);
-    const result = await discountApi.addDiscount(payload);
-    console.log(result);
-    if ((result.msg = "Thành công ")) {
-      notifySuccess("Success");
-      reload((ref: any) => ref + 1);
-      reset();
-    } else notifyError("Fail");
+    fetchData();
+
+    // Xử lý trường hợp component bị unmounted
+    return () => {
+      isMounted = false;
+    };
+  }, [_idDiscountr]);
+  const handleEnableChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    setEnableValue(e.target.value);
   };
+  const handlePercentChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    setIsPercentValue(e.target.value);
+  };
+  const handleOidChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    setIsOidValue(e.target.value);
+  };
+  const handleOicChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    setIsOicValue(e.target.value);
+  };
+  const submit = async (data: any, e: any) => {
+    e.preventDefault();
+
+    const code = data.code === "" ? discount?.code || "" : data.code;
+    const enable = data.enable === "" ? discount?.enable || "" : data.enable;
+    const dateEnd =
+      data.dateEnd === "" ? discount?.dateEnd || "" : data.dateEnd;
+    const dateStart =
+      data.dateStart === "" ? discount?.dateStart || "" : data.dateStart;
+    const quantity =
+      data.quantity === "" ? discount?.quantity || "" : data.quantity;
+    const minPrice =
+      data.minPrice === "" ? discount?.minPrice || "" : data.minPrice;
+    const maxPrice =
+      data.maxPrice === "" ? discount?.maxPrice || "" : data.maxPrice;
+    const is_percent =
+      data.is_percent === "" ? discount?.is_percent || "" : data.is_percent;
+    const is_ship =
+      data.is_ship === "" ? discount?.is_ship || "" : data.is_ship;
+    const is_oic = data.is_oic === "" ? discount?.is_oic || "" : data.is_oic;
+    const is_oid = data.is_oid === "" ? discount?.is_oid || "" : data.is_oid;
+    const value = data.value === "" ? discount?.value || "" : data.value;
+
+    const payload = {
+      _id: _idDiscountr,
+      code: code,
+      enable: Boolean(enable),
+      dateEnd: dateEnd,
+      dateStart: dateStart,
+      quantity: Number(quantity),
+      minPrice: Number(minPrice),
+      maxPrice: Number(maxPrice),
+      is_percent: Boolean(is_percent),
+      is_ship: Boolean(is_ship),
+      is_oic: Boolean(is_oic),
+      is_oid: Boolean(is_oid),
+      value: Number(value),
+    };
+
+    console.log(payload);
+    console.log(discount.products);
+    if (discount.products.length !== 0) {
+      notifyError("Fail: Khuyen Mai da duoc Add");
+      return;
+    }
+    const result = await discountApi.eidtDiscount(payload);
+    console.log(result);
+    if (result.msg === "Thành công ") {
+      notifySuccess("Update Success");
+      reload((ref: number) => ref + 1);
+      setFlag(false);
+      reset();
+    } else {
+      notifyError("Update Fail");
+    }
+    return;
+  };
+  // Format the date before setting it as the default value
+  const formattedDateEnd = discount
+    ? new Date(discount.dateEnd).toISOString().slice(0, 10)
+    : "";
+  const formattedDateStart = discount
+    ? new Date(discount.dateStart).toISOString().slice(0, 10)
+    : "";
+
+  // Convert the boolean value to a string ("true" or "false")
 
   const handleSelect = (e: any) => {
     if (e.target.value !== "Select") {
@@ -53,7 +152,7 @@ export default function ModalAddDiscount({
       <div className="fixed inset-0 z-10 overflow-y-auto">
         <div
           className="fixed inset-0 w-full h-full bg-black opacity-40"
-          onClick={() => setShowModalDiscount(false)}
+          onClick={() => setOpenModalEditEmployee(false)}
         ></div>
         <div className="flex items-center justify-center min-h-screen px-4 py-8">
           <div className="relative w-full max-w-[700px] p-4 mx-auto bg-white rounded-md shadow-lg">
@@ -67,7 +166,7 @@ export default function ModalAddDiscount({
                     <div className="flex-1 text-end">Code: </div>
                     <input
                       {...register("code")}
-                      required
+                      defaultValue={discount?.code}
                       className="shadow appearance-none border rounded py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
                       id="username"
                       type="text"
@@ -78,7 +177,7 @@ export default function ModalAddDiscount({
                     <div className="flex-1 text-end">Max Price: </div>
                     <input
                       {...register("maxPrice")}
-                      required
+                      defaultValue={discount?.maxPrice}
                       className="shadow appearance-none border rounded py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
                       id="username"
                       type="text"
@@ -89,7 +188,7 @@ export default function ModalAddDiscount({
                     <div className="flex-1 text-end">Min Price: </div>
                     <input
                       {...register("minPrice")}
-                      required
+                      defaultValue={discount?.minPrice}
                       className="shadow appearance-none border rounded py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
                       id="username"
                       type="text"
@@ -100,7 +199,7 @@ export default function ModalAddDiscount({
                     <div className="flex-1 text-end">Quantity: </div>
                     <input
                       {...register("quantity")}
-                      required
+                      defaultValue={discount?.quantity}
                       className="shadow appearance-none border rounded py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
                       id="username"
                       type="text"
@@ -111,7 +210,7 @@ export default function ModalAddDiscount({
                     <div className="flex-1 text-end">Value: </div>
                     <input
                       {...register("value")}
-                      required
+                      defaultValue={discount?.value}
                       className="shadow appearance-none border rounded py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
                       id="username"
                       type="text"
@@ -130,6 +229,8 @@ export default function ModalAddDiscount({
                     </label>
                     <select
                       {...register("enable")}
+                      value={enableValue}
+                      onChange={handleEnableChange}
                       className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                     >
                       <option key="1" value="">
@@ -150,6 +251,8 @@ export default function ModalAddDiscount({
                     </label>
                     <select
                       {...register("is_percent")}
+                      value={ispercentValue}
+                      onChange={handlePercentChange}
                       className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                     >
                       <option key="1" value="">
@@ -170,6 +273,7 @@ export default function ModalAddDiscount({
                     </label>
                     <select
                       {...register("is_ship")}
+                      value={isShipValue}
                       className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                     >
                       <option key="1" value="">
@@ -190,6 +294,8 @@ export default function ModalAddDiscount({
                     </label>
                     <select
                       {...register("is_oic")}
+                      value={isOicValue}
+                      onChange={handleOicChange}
                       className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                     >
                       <option key="1" value="">
@@ -210,6 +316,8 @@ export default function ModalAddDiscount({
                     </label>
                     <select
                       {...register("is_oid")}
+                      value={isOidValue}
+                      onChange={handleOidChange}
                       className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                     >
                       <option key="1" value="">
@@ -230,6 +338,7 @@ export default function ModalAddDiscount({
                     </label>
                     <input
                       {...register("dateStart")}
+                      defaultValue={formattedDateStart}
                       required
                       type="date"
                       id="dateStart"
@@ -247,6 +356,7 @@ export default function ModalAddDiscount({
                       type="date"
                       id="dateEnd"
                       {...register("dateEnd")}
+                      defaultValue={formattedDateEnd}
                       required
                     />
                   </div>
