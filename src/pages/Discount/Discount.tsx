@@ -9,6 +9,7 @@ import { USER_MODEL } from "../../models/user.model";
 import { formatDate } from "../../utils/dateFormater";
 import { moneyFormater } from "../../utils/moneyFormater";
 import { notifyError, notifySuccess } from "../../utils/notify";
+import ModalDelete from "../../components/Modal/Modaldiscout/modalDelete";
 
 type Props = {};
 
@@ -18,15 +19,20 @@ function DiscountList(props: Props) {
   const total = 20;
   const [currentPage, setCurrentPage] = useState<number>(0);
   const [searchItem, setSearchItem] = useState("");
+  const [idDiscount, setIdDiscount] = useState("");
+
   const [order, setOrder] = useState("ACS");
   const [showModalDiscount, setShowModalDiscount] = useState(false);
+  const [showModalDeleteDiscount, setShowModalDeleteDiscount] = useState(false);
   const [reload, setReload] = useState(0);
 
   const [discountList, setDiscountList] = useState([]);
 
-  const handleRemove = (removeId: number) => {
-    newUserList = discountList.filter((item: any) => item.id !== removeId);
-    setDiscountList(newUserList);
+  const handleRemove = (removeId: any) => {
+    // newUserList = discountList.filter((item: any) => item.id !== removeId);
+    // setDiscountList(newUserList);
+    setIdDiscount(removeId);
+    setShowModalDeleteDiscount(true);
   };
 
   const sorting = (col: string) => {
@@ -222,9 +228,9 @@ function DiscountList(props: Props) {
                     >
                       {item?.enable === false ? "Enable" : "Disable"}
                     </a>
-                    {/* <a className="bg-red-500 p-2 text-white hover:shadow-lg text-xs font-thin cursor-pointer">
+                    <a className="bg-red-500 p-2 text-white hover:shadow-lg text-xs font-thin cursor-pointer">
                       <span onClick={() => handleRemove(item.id)}>Remove</span>
-                    </a> */}
+                    </a>
                   </td>
                 </tr>
               ))
@@ -241,12 +247,14 @@ function DiscountList(props: Props) {
           reload={setReload}
         />
       )}
-      {/* <Pagination
-        limit={LIMIT}
-        currentPage={currentPage}
-        setCurrentPage={setCurrentPage}
-        total={total}
-      /> */}
+
+      {showModalDeleteDiscount && (
+        <ModalDelete
+          setOpenModalDeleteCategory={setShowModalDeleteDiscount}
+          _id={idDiscount}
+          reload={setReload}
+        />
+      )}
     </div>
   );
 }
