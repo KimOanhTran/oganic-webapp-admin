@@ -1,10 +1,11 @@
 import { yupResolver } from "@hookform/resolvers/yup";
 import { Button, Upload } from "antd";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import categoryApi from "../../../apis/category/categoryApi";
 import { notifyError, notifySuccess } from "../../../utils/notify";
 import Specs from "./specs";
+import supplierApi from "../../../apis/supplier/supplierApi";
 
 export default function ModalCreateCategory({
   setOpenModalCreateCategory,
@@ -18,7 +19,7 @@ export default function ModalCreateCategory({
   const [category, setCategory] = useState(""); //Biến trạng thái lưu trữ tên danh mục sản phẩm
   const [imagesBase64, setImagesBase64] = useState<any>(""); // Biến trạng thái lưu trữ hình ảnh của danh mục sp dưới dạng chuỗi base64
   const [iconBase64, setIconBase64] = useState<any>(""); //Biến dạng trạng thái lưu trữ biểu tượng của danh mục sản phẩm dưới dạng chuỗi base64
-
+  const [supplier, setSupplier] = useState<Array<any>>([]);
   //Hàm này chuyển đổi file hình ảnh sang chuỗi base64 và gọi hàm cb để lưu trữ kết quả
   const getBase64 = (file: any, cb: any) => {
     let reader = new FileReader();
@@ -63,12 +64,14 @@ export default function ModalCreateCategory({
       values.push(newArray);
       newArray = [];
     });
-    name.forEach((item, index) => {
-      if (item) {
-        let obj = { name: item, values: values[index] };
-        specs_model.push(obj);
-      }
-    });
+    // name.forEach((item, index) => {
+    //   if (item) {
+    //     let obj = { name: item, values: values[index] };
+    //     specs_model.push(obj);
+    //   }
+    // });
+    let objSupplier = { name: "Supplier", values: supplier };
+    specs_model.push(objSupplier);
     data.specsModel = specs_model;
 
     const payload = {
@@ -86,6 +89,17 @@ export default function ModalCreateCategory({
       reset();
     } else notifyError("Fail");
   };
+
+  useEffect(() => {
+    (async () => {
+      const supplierList = await supplierApi.getListSupplier();
+      const dataSupplier = supplierList.data.map((item: any) => ({
+        value: item.name,
+      }));
+      setSupplier(dataSupplier);
+      console.log(dataSupplier);
+    })();
+  }, []);
 
   return (
     <>
