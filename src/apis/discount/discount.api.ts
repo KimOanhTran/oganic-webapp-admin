@@ -20,6 +20,10 @@ const discountApi = {
     const url = "/discount/delete"; //params : page, filter
     return axiosClient.post(url, payload);
   },
+  getADiscount(idDiscount: any): Promise<ReturnReponse<any>> {
+    const url = `/discount/getADiscount/${idDiscount}`; //params : page, filter
+    return axiosClient.get(url);
+  },
 };
 
 export default discountApi;

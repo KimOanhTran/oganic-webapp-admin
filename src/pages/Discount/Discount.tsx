@@ -10,6 +10,7 @@ import { formatDate } from "../../utils/dateFormater";
 import { moneyFormater } from "../../utils/moneyFormater";
 import { notifyError, notifySuccess } from "../../utils/notify";
 import ModalDelete from "../../components/Modal/Modaldiscout/modalDelete";
+import ModalEditDiscount from "../../components/Modal/Modaldiscout/modalEditDiscount";
 
 type Props = {};
 
@@ -24,14 +25,23 @@ function DiscountList(props: Props) {
   const [order, setOrder] = useState("ACS");
   const [showModalDiscount, setShowModalDiscount] = useState(false);
   const [showModalDeleteDiscount, setShowModalDeleteDiscount] = useState(false);
+  const [showModalEditDiscount, setShowModalEditDiscount] = useState(false);
+
   const [reload, setReload] = useState(0);
 
   const [discountList, setDiscountList] = useState([]);
+  const [discount, setDiscount] = useState({ code: "", id: "" });
 
-  const handleRemove = (removeId: any) => {
+  const handleRemove = (removeId: any, code: any) => {
     // newUserList = discountList.filter((item: any) => item.id !== removeId);
     // setDiscountList(newUserList);
+    console.log(removeId);
     setIdDiscount(removeId);
+    const payload = {
+      code: code,
+      id: removeId,
+    };
+    setDiscount(payload);
     setShowModalDeleteDiscount(true);
   };
 
@@ -74,6 +84,11 @@ function DiscountList(props: Props) {
       setDiscountList(result.data);
     })();
   }, [reload]);
+
+  const handleEdit = async (idDiscount: any) => {
+    console.log(idDiscount);
+    setIdDiscount(idDiscount), setShowModalEditDiscount(true);
+  };
 
   return (
     <div className="table w-full p-2 max-h-screen">
@@ -207,7 +222,7 @@ function DiscountList(props: Props) {
                     {moneyFormater(item?.maxPrice)}
                   </td>
                   <td className="p-2 border-r">
-                    {moneyFormater(item?.maxPrice)}
+                    {moneyFormater(item?.minPrice)}
                   </td>
                   <td className="p-2 border-r">{item?.quantity}</td>
                   <td className="p-2 border-r">
@@ -229,7 +244,12 @@ function DiscountList(props: Props) {
                       {item?.enable === false ? "Enable" : "Disable"}
                     </a>
                     <a className="bg-red-500 p-2 text-white hover:shadow-lg text-xs font-thin cursor-pointer">
-                      <span onClick={() => handleRemove(item.id)}>Remove</span>
+                      <span onClick={() => handleRemove(item?._id, item?.code)}>
+                        Remove
+                      </span>
+                    </a>
+                    <a className="bg-red-500 p-2 text-white hover:shadow-lg text-xs font-thin cursor-pointer">
+                      <span onClick={() => handleEdit(item?._id)}>Edit</span>
                     </a>
                   </td>
                 </tr>
@@ -250,8 +270,16 @@ function DiscountList(props: Props) {
 
       {showModalDeleteDiscount && (
         <ModalDelete
-          setOpenModalDeleteCategory={setShowModalDeleteDiscount}
-          _id={idDiscount}
+          setOpenModalDeleteDiscount={setShowModalDeleteDiscount}
+          discount={discount}
+          reload={setReload}
+        />
+      )}
+
+      {showModalEditDiscount && (
+        <ModalEditDiscount
+          setOpenModalEditEmployee={setShowModalEditDiscount}
+          _idDiscountr={idDiscount}
           reload={setReload}
         />
       )}

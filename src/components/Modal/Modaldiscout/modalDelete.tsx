@@ -7,11 +7,11 @@ import discountApi from "../../../apis/discount/discount.api";
 export default function ModalDelete({
   setOpenModalDeleteDiscount,
   reload,
-  _id,
+  discount,
 }: any) {
   const handleDeleteClick = async () => {
     try {
-      const result = await discountApi.deleteDiscount(_id);
+      const result = await discountApi.deleteDiscount(discount);
       console.log("resultApi", result);
 
       console.log("status", result.statusCode);

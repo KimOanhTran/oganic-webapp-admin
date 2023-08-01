@@ -6,6 +6,10 @@ interface ResponseInstant {
 }
 
 export interface ReturnReponse<T> extends ResponseInstant {
+  [x: string]: any;
+  is_percent: any;
+  is_ship: any;
+  enable(enable: any): unknown;
   data: T;
 }
 
