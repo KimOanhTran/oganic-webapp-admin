@@ -17,6 +17,7 @@ export default function ModalImport({
 
   const [colorModal, setColorModal] = useState<Array<any>>([]);
   const [colorSubmit, setColorSubmit] = useState("");
+  const [nameProduct, setNameProduct] = useState("");
 
   const {
     register,
@@ -31,7 +32,7 @@ export default function ModalImport({
       data: [
         {
           code: _id,
-          color: colorSubmit,
+          color: nameProduct,
           quantity: Number(data.quantity),
           price: Number(data.price),
         },
@@ -52,7 +53,7 @@ export default function ModalImport({
 
   const handleSelect = (e: any) => {
     if (e.target.value !== "Select") {
-      // console.log(1);
+      console.log(e.target.value);
       setColorSubmit(e.target.value);
     }
   };
@@ -61,8 +62,9 @@ export default function ModalImport({
     (async () => {
       const sendId = "code=" + _id;
       const result = await productApi.getDetilaProduct(sendId);
-      // console.log(result);
+      console.log(result);
       setColorModal(result.data.colors);
+      setNameProduct(result.data.name);
     })();
   }, []);
 
@@ -81,13 +83,14 @@ export default function ModalImport({
             <form onSubmit={handleSubmit(submit)}>
               <div>
                 <div className="name flex justify-center items-center gap-2 mb-[20px]">
-                  <label
+                  {/* <label
                     htmlFor="countries_disabled"
-                    className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
+                    className="block mb-2 text-sm font-medium text-gray-900 dark:text-black"
                   >
-                    Colors:
-                  </label>
-                  <select
+                    Name:
+                  </label> */}
+                  <span>{nameProduct}</span>
+                  {/* <select
                     required
                     onChange={handleSelect}
                     className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
@@ -98,7 +101,7 @@ export default function ModalImport({
                         {color.color}
                       </option>
                     ))}
-                  </select>
+                  </select> */}
                 </div>
 
                 <div className="name flex justify-center items-center  gap-2 mb-[20px]">
