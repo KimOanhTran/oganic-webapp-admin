@@ -17,10 +17,9 @@ export default function ModalDiscountUser({
   };
 
   const [codeDiscount, setCodeDiscount] = useState(0);
+  const [idDiscount, setIdDiscount] = useState(0);
   const [listDiscount, setListDiscount] = useState<Array<any>>([]);
   const [disabled, setDisabled] = useState(false);
-
-  console.log(_idUser);
 
   const {
     register,
@@ -30,6 +29,7 @@ export default function ModalDiscountUser({
   } = useForm<FormValues>({});
 
   const payloadDelete = {
+    _id: idDiscount,
     code: codeDiscount,
     accounts_del: [_idUser],
   };
@@ -37,15 +37,16 @@ export default function ModalDiscountUser({
   const submit = async (data: any, e: any) => {
     e.preventDefault();
     setDisabled(true);
-    // console.log(data);
+    console.log(idDiscount);
     const payload = {
+      _id: idDiscount,
       code: codeDiscount,
       accounts_add: [_idUser],
     };
     console.log(payload);
 
     const submit = await userApi.editDiscountUser(payload);
-    if ((submit.msg = "Thành công ")) {
+    if (submit.msg === "Thành công ") {
       setDisabled(false);
       notifySuccess("Success");
       reset();
@@ -56,6 +57,10 @@ export default function ModalDiscountUser({
   const handleSelect = (e: any) => {
     if (e.target.value !== "Select") {
       setCodeDiscount(e.target.value);
+      const selectedItem = listDiscount.find(
+        (item: any) => item.code === e.target.value
+      );
+      setIdDiscount(selectedItem._id);
     }
   };
   // console.log(codeDiscount);
@@ -74,7 +79,7 @@ export default function ModalDiscountUser({
   useEffect(() => {
     (async () => {
       const result = await discountApi.getListDiscount();
-      // console.log("listDiscount", result);
+      console.log("listDiscount", result);
       setListDiscount(result.data);
     })();
   }, []);
@@ -104,7 +109,7 @@ export default function ModalDiscountUser({
                         } else return "";
                       })
                       .map((item: any, index: number) => (
-                        <option key={index} value={item.code}>
+                        <option key={item.id} value={item.code}>
                           {item.code}
                         </option>
                       ))}
@@ -113,14 +118,14 @@ export default function ModalDiscountUser({
               </div>
               <div className="relative left-[10%] flex gap-[10px]">
                 <button
-                disabled={disabled}
+                  disabled={disabled}
                   type="submit"
                   className="w-[100px] p-2 rounded-sm text-center bg-green-500  text-white"
                 >
                   Submit
                 </button>
                 <button
-                disabled={disabled}
+                  disabled={disabled}
                   onClick={handleDeleteDiscout}
                   type="button"
                   className="w-[100px] p-2 rounded-sm text-center bg-red-500  text-white"

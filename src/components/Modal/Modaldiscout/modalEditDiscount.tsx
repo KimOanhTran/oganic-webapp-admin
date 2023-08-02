@@ -125,6 +125,7 @@ export default function ModalEditDiscount({
     if (result.msg === "Thành công ") {
       notifySuccess("Update Success");
       reload((ref: number) => ref + 1);
+      setOpenModalEditEmployee(false);
       setFlag(false);
       reset();
     } else {

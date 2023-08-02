@@ -62,8 +62,9 @@ function DiscountList(props: Props) {
     }
   };
 
-  const handleEditDiscount = async (status: boolean, code: any) => {
+  const handleEditDiscount = async (status: boolean, code: any, id: any) => {
     const payload = {
+      _id: id,
       code: code,
       enable: !status,
     };
@@ -238,7 +239,7 @@ function DiscountList(props: Props) {
                           : "bg-red-500 p-2 text-white hover:shadow-lg text-xs font-thin cursor-pointer"
                       }
                       onClick={() => {
-                        handleEditDiscount(item?.enable, item?.code);
+                        handleEditDiscount(item?.enable, item?.code, item?._id);
                       }}
                     >
                       {item?.enable === false ? "Enable" : "Disable"}
@@ -248,7 +249,7 @@ function DiscountList(props: Props) {
                         Remove
                       </span>
                     </a>
-                    <a className="bg-red-500 p-2 text-white hover:shadow-lg text-xs font-thin cursor-pointer">
+                    <a className="bg-blue-500 p-2 text-white hover:shadow-lg text-xs font-thin cursor-pointer">
                       <span onClick={() => handleEdit(item?._id)}>Edit</span>
                     </a>
                   </td>
