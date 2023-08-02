@@ -14,6 +14,7 @@ export default function ModalCreate({ setOpenModal, setReload }: any) {
     price: number;
     sale: number;
     desc: string;
+    supplier: string;
   };
 
   const [flag, setFlag] = useState(false);
@@ -59,6 +60,7 @@ export default function ModalCreate({ setOpenModal, setReload }: any) {
   // console.log(category);
 
   const submit = async (data: any, e: any) => {
+    console.log(data);
     e.preventDefault();
     data.image_base64 = imagesBase64;
     data.category = selectCategory;
@@ -66,15 +68,19 @@ export default function ModalCreate({ setOpenModal, setReload }: any) {
 
     let arr1 = Object.keys(data);
     let specs: { [k: string]: any } = {};
-    const indexName = arr1.filter((item) => item.toString().startsWith("spec"));
-    const indexValue = arr1.filter((item) =>
-      item.toString().startsWith("value")
-    );
-    indexName.forEach((item, index) => {
-      if (data[indexValue[index]]) {
-        specs[data[item]] = data[indexValue[index]];
-      }
-    });
+    // const indexName = arr1.filter((item) => item.toString().startsWith("spec"));
+    // const indexValue = arr1.filter((item) =>
+    //   item.toString().startsWith("value")
+    // );
+    // indexName.forEach((item, index) => {
+    //   if (data[indexValue[index]]) {
+    //     specs[data[item]] = data[indexValue[index]];
+    //   }
+    // });
+    if (data.supplier == "") {
+      notifyError("Please select supplier !!");
+      return;
+    }
     const payload = {
       name: data.name,
       code: data.code,
@@ -83,6 +89,7 @@ export default function ModalCreate({ setOpenModal, setReload }: any) {
       specs: specs,
       price: data.price,
       sale: data.sale,
+      supplier_name: data.supplier,
       image_base64: imagesBase64,
     };
 
@@ -104,8 +111,9 @@ export default function ModalCreate({ setOpenModal, setReload }: any) {
 
   useEffect(() => {
     (async () => {
-      // const result = await supplierApi.getListSupplier();
-      // setSupplier(result.data);
+      const resultSupplier = await supplierApi.getListSupplier();
+      setSupplier(resultSupplier.data);
+      console.log(resultSupplier.data);
       const result = await categoryApi.getCategory();
       setCategory(result.data);
     })();
@@ -171,6 +179,21 @@ export default function ModalCreate({ setOpenModal, setReload }: any) {
                       type="text"
                       placeholder="%"
                     />
+                  </div>
+
+                  <div className="name flex justify-between items-center gap-2 mb-[20px]">
+                    <div className="">Supplier: </div>
+                    <select
+                      {...register("supplier")}
+                      className="shadow appearance-none border rounded py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline w-[200px]"
+                    >
+                      <option value={""}>Chọn</option>
+                      {supplier.map((item: any, index: any) => (
+                        <option key={index} value={item.name}>
+                          {item.name}
+                        </option>
+                      ))}
+                    </select>
                   </div>
                 </div>
                 <div className="center w-[400px]">
