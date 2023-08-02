@@ -15,6 +15,7 @@ export default function ModalDiscount({
   };
 
   const [codeDiscount, setCodeDiscount] = useState(0);
+  const [idDiscount, setIdDiscount] = useState(0);
   const [listDiscount, setListDiscount] = useState<Array<any>>([]);
   const [disabled, setDisabled] = useState(false);
 
@@ -26,6 +27,7 @@ export default function ModalDiscount({
   } = useForm<FormValues>({});
 
   const payloadDelete = {
+    _id: idDiscount,
     code: codeDiscount,
     products_del: [_idProduct],
   };
@@ -35,13 +37,14 @@ export default function ModalDiscount({
     setDisabled(true);
     // console.log(data);
     const payload = {
+      _id: idDiscount,
       code: codeDiscount,
       products_add: [_idProduct],
     };
     console.log(payload);
 
     const submit = await productApi.editDiscount(payload);
-    if ((submit.msg = "Thành công ")) {
+    if (submit.msg === "Thành công ") {
       setDisabled(false);
       notifySuccess("Success");
       reset();
@@ -52,6 +55,10 @@ export default function ModalDiscount({
   const handleSelect = (e: any) => {
     if (e.target.value !== "Select") {
       setCodeDiscount(e.target.value);
+      const selectedItem = listDiscount.find(
+        (item: any) => item.code === e.target.value
+      );
+      setIdDiscount(selectedItem._id);
     }
   };
   // console.log(codeDiscount);
@@ -59,7 +66,7 @@ export default function ModalDiscount({
   const handleDeleteDiscout = async () => {
     setDisabled(true);
     const submitDel = await productApi.editDiscount(payloadDelete);
-    if ((submitDel.msg = "Thành công ")) {
+    if (submitDel.msg === "Thành công ") {
       setDisabled(false);
       notifySuccess("Success");
       reset();

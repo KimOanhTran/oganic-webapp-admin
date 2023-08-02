@@ -87,6 +87,7 @@ export default function ModalCreateCategory({
       notifySuccess("Success");
       setReload((ref: number) => ref + 1);
       reset();
+      setOpenModalCreateCategory(false);
     } else notifyError("Fail");
   };
 

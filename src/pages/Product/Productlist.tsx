@@ -198,7 +198,7 @@ function Productlist(props: Props) {
               <th className="p-2 border-r cursor-pointer text-sm font-thin text-gray-500">
                 <div className="flex items-center justify-center">Name</div>
               </th>
-              <th className="p-2 border-r cursor-pointer text-sm font-thin text-gray-500">
+              <th className="p-2 border-r cursor-pointer text-sm font-thin text-gray-500 hidden">
                 <div className="flex items-center justify-center">Color</div>
               </th>
               <th
@@ -366,9 +366,9 @@ const ProductRow = (props: any) => {
         <img src={item?.image_url} className="w-full h-full object-contain" />
       </td>
       <td className="p-2 border-r w-[200px]">{item?.name}</td>
-      <td className="p-2 border-r ">
+      <td className="p-2 border-r hidden ">
         <select
-          className="w-full"
+          className="w-full hidden"
           onChange={(e: any) => {
             setColorQuantity(e.target.value);
           }}
