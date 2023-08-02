@@ -70,13 +70,13 @@ export default function ModalCreateCategory({
     //     specs_model.push(obj);
     //   }
     // });
-    let objSupplier = { name: "Supplier", values: supplier };
-    specs_model.push(objSupplier);
-    data.specsModel = specs_model;
+    // let objSupplier = { name: "Supplier", values: supplier };
+    // specs_model.push(objSupplier);
+    // data.specsModel = specs_model;
 
     const payload = {
       name: nameCategory,
-      specsModel: data.specsModel,
+      specsModel: [],
       image_base64: imagesBase64,
       icon_base64: iconBase64,
       slug: slug,
