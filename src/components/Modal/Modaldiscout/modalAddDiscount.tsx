@@ -33,7 +33,7 @@ export default function ModalAddDiscount({
       value: Number(data.value),
     };
 
-    // console.log(payload);
+    console.log(payload);
     const result = await discountApi.addDiscount(payload);
     console.log(result);
     if ((result.msg = "Thành công ")) {
