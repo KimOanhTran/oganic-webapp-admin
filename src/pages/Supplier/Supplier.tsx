@@ -12,6 +12,7 @@ import ModalRegiserEmployee from "../../components/Modal/ModalEmployyeeAccount/m
 import ModalCreate from "../../components/Modal/ModalSupplier/modalCreate";
 import ModalEdit from "../../components/Modal/ModalSupplier/modalEdit";
 import ModalDelete from "../../components/Modal/ModalSupplier/modalDelete";
+import { formatDate2 } from "../../utils/dateFormater";
 
 type Props = {};
 function Userlist(props: Props) {
@@ -167,6 +168,16 @@ function Userlist(props: Props) {
               <div className="flex items-center justify-center">Number</div>
             </th>
             <th className="p-2 border-r cursor-pointer text-sm font-thin text-gray-500">
+              <div className="flex items-center justify-center">
+                Created time
+              </div>
+            </th>
+            <th className="p-2 border-r cursor-pointer text-sm font-thin text-gray-500">
+              <div className="flex items-center justify-center">
+                Last update time
+              </div>
+            </th>
+            <th className="p-2 border-r cursor-pointer text-sm font-thin text-gray-500">
               <div className="flex items-center justify-center">Actions</div>
             </th>
           </tr>
@@ -192,6 +203,14 @@ function Userlist(props: Props) {
                   <td className="p-2 border-r">{item?.name}</td>
                   <td className="p-2 border-r">{item?.phone}</td>
                   <td className="p-2 border-r">{`${item?.address?.address}, ${item?.address?.district}, ${item?.address?.province}`}</td>
+                  <td className="p-2 border-r">
+                    {" "}
+                    {formatDate2(item?.createdAt)}
+                  </td>
+                  <td className="p-2 border-r">
+                    {formatDate2(item?.updatedAt)}
+                  </td>
+
                   <td className="flex gap-4 justify-center">
                     <a
                       onClick={() => {

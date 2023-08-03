@@ -32,7 +32,10 @@ export default function ModalAddDiscount({
       is_oid: Boolean(data.is_oid),
       value: Number(data.value),
     };
-
+    if (payload.minPrice > payload.maxPrice) {
+      notifyError("Fail: MinPrice > MaxPrice");
+      return;
+    }
     console.log(payload);
     const result = await discountApi.addDiscount(payload);
     console.log(result);
@@ -201,12 +204,12 @@ export default function ModalAddDiscount({
                     </select>
                   </div>
 
-                  <div className="flex items-center gap-4 mb-2  ">
+                  <div className="flex items-center gap-4 mb-2   ">
                     <label
                       htmlFor="countries_disabled"
                       className="block w-[200px] text-sm font-medium text-gray-900 dark:text-black"
                     >
-                      Expired
+                      One in day
                     </label>
                     <select
                       {...register("is_oid")}

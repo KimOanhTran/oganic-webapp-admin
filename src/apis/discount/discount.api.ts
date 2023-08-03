@@ -24,6 +24,11 @@ const discountApi = {
     const url = `/discount/getADiscount/${idDiscount}`; //params : page, filter
     return axiosClient.get(url);
   },
+  getAdded(payload: any): Promise<ReturnReponse<any>> {
+    console.log(payload);
+    const url = "/discount/getHistory"; //params : page, filter
+    return axiosClient.post(url, payload);
+  },
 };
 
 export default discountApi;

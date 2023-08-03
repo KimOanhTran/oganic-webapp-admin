@@ -120,6 +120,11 @@ export default function ModalEditDiscount({
       notifyError("Fail: Khuyen Mai da duoc Add");
       return;
     }
+
+    if (payload.minPrice > payload.maxPrice) {
+      notifyError("Fail: MinPrice > MaxPrice");
+      return;
+    }
     const result = await discountApi.eidtDiscount(payload);
     console.log(result);
     if (result.msg === "Thành công ") {
@@ -308,12 +313,12 @@ export default function ModalEditDiscount({
                     </select>
                   </div>
 
-                  <div className="flex items-center gap-4 mb-2  ">
+                  <div className="flex items-center gap-4 mb-2   ">
                     <label
                       htmlFor="countries_disabled"
                       className="block w-[200px] text-sm font-medium text-gray-900 dark:text-black"
                     >
-                      Expired
+                      One in day
                     </label>
                     <select
                       {...register("is_oid")}
