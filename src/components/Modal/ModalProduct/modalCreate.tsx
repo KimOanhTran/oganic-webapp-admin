@@ -102,6 +102,7 @@ export default function ModalCreate({ setOpenModal, setReload }: any) {
       notifySuccess("Create Success");
       setReload((ref: number) => ref + 1);
       setFlag(false);
+      setOpenModal(false);
       reset();
     } else {
       notifyError("Create Fail");

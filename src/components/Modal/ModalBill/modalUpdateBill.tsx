@@ -41,8 +41,13 @@ export default function ModalUpdateBill({
     };
 
     const updateResult = await billApi.updateBill(payload);
-    if (updateResult.statusCode === 200 && (status !== "Canceled" && status !== "Done") ) {
+    if (
+      updateResult.statusCode === 200 &&
+      status !== "Canceled" &&
+      status !== "Done"
+    ) {
       notifySuccess("Success");
+      setShowModalUpdateBill(false);
     } else notifyError("Fail");
     console.log(updateResult);
     console.log(payload);

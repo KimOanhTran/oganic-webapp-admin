@@ -11,6 +11,7 @@ import { moneyFormater } from "../../utils/moneyFormater";
 import { notifyError, notifySuccess } from "../../utils/notify";
 import ModalDelete from "../../components/Modal/Modaldiscout/modalDelete";
 import ModalEditDiscount from "../../components/Modal/Modaldiscout/modalEditDiscount";
+import ModalHistoryAdded from "../../components/Modal/Modaldiscout/ModalHistoryAdded";
 
 type Props = {};
 
@@ -25,6 +26,7 @@ function DiscountList(props: Props) {
   const [order, setOrder] = useState("ACS");
   const [showModalDiscount, setShowModalDiscount] = useState(false);
   const [showModalDeleteDiscount, setShowModalDeleteDiscount] = useState(false);
+  const [showModalAddedDiscount, setShowModalAddedDiscount] = useState(false);
   const [showModalEditDiscount, setShowModalEditDiscount] = useState(false);
 
   const [reload, setReload] = useState(0);
@@ -32,6 +34,18 @@ function DiscountList(props: Props) {
   const [discountList, setDiscountList] = useState([]);
   const [discount, setDiscount] = useState({ code: "", id: "" });
 
+  const handleAdded = (Id: any, code: any) => {
+    // newUserList = discountList.filter((item: any) => item.id !== removeId);
+    // setDiscountList(newUserList);
+    console.log(Id);
+    setIdDiscount(Id);
+    const payload = {
+      code: code,
+      id: Id,
+    };
+    setDiscount(payload);
+    setShowModalAddedDiscount(true);
+  };
   const handleRemove = (removeId: any, code: any) => {
     // newUserList = discountList.filter((item: any) => item.id !== removeId);
     // setDiscountList(newUserList);
@@ -44,7 +58,6 @@ function DiscountList(props: Props) {
     setDiscount(payload);
     setShowModalDeleteDiscount(true);
   };
-
   const sorting = (col: string) => {
     if (order === "ACS") {
       const sorted = [...discountList].sort((a: any, b: any) =>
@@ -153,8 +166,8 @@ function DiscountList(props: Props) {
             <th className="p-2 border-r cursor-pointer text-sm font-thin text-gray-500">
               <div className="flex items-center justify-center">Customer</div>
             </th>
-            <th className="p-2 border-r cursor-pointer text-sm font-thin text-gray-500">
-              <div className="flex items-center justify-center">Expired</div>
+            <th className="p-2 border-r cursor-pointer text-sm font-thin text-gray-500 ">
+              <div className="flex items-center justify-center">One in day</div>
             </th>
             <th className="p-2 border-r cursor-pointer text-sm font-thin text-gray-500">
               <div className="flex items-center justify-center">Is Percent</div>
@@ -249,6 +262,11 @@ function DiscountList(props: Props) {
                         Remove
                       </span>
                     </a>
+                    <a className="bg-yellow-500 p-2 text-white hover:shadow-lg text-xs font-thin cursor-pointer">
+                      <span onClick={() => handleAdded(item?._id, item?.code)}>
+                        Added
+                      </span>
+                    </a>
                     <a className="bg-blue-500 p-2 text-white hover:shadow-lg text-xs font-thin cursor-pointer">
                       <span onClick={() => handleEdit(item?._id)}>Edit</span>
                     </a>
@@ -280,6 +298,14 @@ function DiscountList(props: Props) {
       {showModalEditDiscount && (
         <ModalEditDiscount
           setOpenModalEditEmployee={setShowModalEditDiscount}
+          _idDiscountr={idDiscount}
+          reload={setReload}
+        />
+      )}
+
+      {showModalAddedDiscount && (
+        <ModalHistoryAdded
+          setOpenModalAddedDiscount={setShowModalAddedDiscount}
           _idDiscountr={idDiscount}
           reload={setReload}
         />

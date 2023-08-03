@@ -9,6 +9,7 @@ import Pagination from "../../components/Pangination/Pagination";
 import { USER_MODEL } from "../../models/user.model";
 import { notifyError, notifySuccess } from "../../utils/notify";
 import ModalDelete from "../../components/Modal/ModalCategory/modalDelete";
+import { formatDate2 } from "../../utils/dateFormater";
 
 type Props = {};
 
@@ -129,7 +130,16 @@ function Category(props: Props) {
             <th className="p-2 border-r cursor-pointer text-sm font-thin text-gray-500">
               <div className="flex items-center justify-center">Name</div>
             </th>
-
+            <th className="p-2 border-r cursor-pointer text-sm font-thin text-gray-500">
+              <div className="flex items-center justify-center">
+                Created time
+              </div>
+            </th>
+            <th className="p-2 border-r cursor-pointer text-sm font-thin text-gray-500">
+              <div className="flex items-center justify-center">
+                Last update time
+              </div>
+            </th>
             <th className="p-2 border-r cursor-pointer text-sm font-thin text-gray-500">
               <div className="flex items-center justify-center">Actions</div>
             </th>
@@ -154,6 +164,12 @@ function Category(props: Props) {
                 >
                   <td className="p-2 border-r">{index + 1}</td>
                   <td className="p-2 border-r">{item?.name}</td>
+                  <td className="p-2 border-r">
+                    {formatDate2(item?.createdAt)}
+                  </td>
+                  <td className="p-2 border-r">
+                    {formatDate2(item?.updatedAt)}
+                  </td>
                   <td className="flex gap-4 justify-center">
                     <a
                       onClick={() => {
