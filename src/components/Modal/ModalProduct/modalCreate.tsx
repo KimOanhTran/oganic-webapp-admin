@@ -6,6 +6,7 @@ import categoryApi from "../../../apis/category/categoryApi";
 import productApi from "../../../apis/product/product";
 import { notifyError, notifySuccess } from "../../../utils/notify";
 import supplierApi from "../../../apis/supplier/supplierApi";
+import authApi from "../../../apis/auth/authApi";
 
 export default function ModalCreate({ setOpenModal, setReload }: any) {
   type FormValues = {
@@ -24,6 +25,7 @@ export default function ModalCreate({ setOpenModal, setReload }: any) {
   const [specs, setSpecs] = useState<Array<any>>([]);
   const [imagesBase64, setImagesBase64] = useState<any>("");
   const [selectValue, setSelectValue] = useState([]);
+  const [idUpdater, setIdUpdater] = useState("");
 
   const {
     register,
@@ -91,6 +93,7 @@ export default function ModalCreate({ setOpenModal, setReload }: any) {
       sale: data.sale,
       supplier_name: data.supplier,
       image_base64: imagesBase64,
+      idUpdater: idUpdater,
     };
 
     const result = await productApi.createProduct(payload);
@@ -114,9 +117,11 @@ export default function ModalCreate({ setOpenModal, setReload }: any) {
     (async () => {
       const resultSupplier = await supplierApi.getListSupplier();
       setSupplier(resultSupplier.data);
-      console.log(resultSupplier.data);
+      // console.log(resultSupplier.data);
       const result = await categoryApi.getCategory();
       setCategory(result.data);
+      const currentUser = await authApi.getInfo();
+      setIdUpdater(currentUser.data._id);
     })();
   }, []);
 

@@ -3,21 +3,23 @@ import productApi from "../../../apis/product/product";
 import { moneyFormater } from "../../../utils/moneyFormater";
 import { formatDate, formatDate2 } from "../../../utils/dateFormater";
 
-export default function ModalHistoryImport({
-  setOpenModalHistoryImport,
-  _id,
+export default function ModalHistoryPrice({
+  setOpenModalHistoryPrice,
+  code,
   nameProduct,
   setReload,
 }: any) {
-  const [importList, setImportList] = useState<Array<any>>([]);
+  console.log(code);
+  const [historyList, setHistoryList] = useState<Array<any>>([]);
   useEffect(() => {
     (async () => {
       const payload = {
-        id: _id,
+        code: code,
       };
-      const result = await productApi.getListImportById(payload);
-      setImportList(result.data);
-      console.log(result);
+      console.log(payload);
+      const result = await productApi.getListHistoryPriceById(payload);
+      setHistoryList(result.data);
+      // console.log(result);
     })();
   }, []);
 
@@ -26,12 +28,12 @@ export default function ModalHistoryImport({
       <div className="fixed inset-0 z-10 overflow-y-auto">
         <div
           className="fixed inset-0 w-full h-full bg-black opacity-40"
-          onClick={() => setOpenModalHistoryImport(false)}
+          onClick={() => setOpenModalHistoryPrice(false)}
         ></div>
         <div className="flex items-center min-h-screen px-4 py-8">
           <div className="relative w-full max-w-[1200px] p-4 mx-auto bg-white rounded-md shadow-lg h-[700px]">
             <div className="text-center mb-4 uppercase text-lg">
-              History import product
+              History change product price
             </div>
             <div className="text-center mb-4 uppercase text-lg">
               {nameProduct}
@@ -42,40 +44,32 @@ export default function ModalHistoryImport({
                   {/* <th className="p-2 border-r cursor-pointer text-sm font-thin text-gray-500">
                     <div className="flex items-center justify-center">ID</div>
                   </th> */}
-                  {/* <th className="p-2 border-r cursor-pointer text-sm font-thin text-gray-500">
-                    <div className="flex items-center justify-center">
-                      Updater
-                    </div>
-                  </th> */}
                   <th className="p-2 border-r cursor-pointer text-sm font-thin text-gray-500">
                     <div className="flex items-center justify-center">Name</div>
                   </th>
-                  <th className="p-2 border-r cursor-pointer text-sm font-thin text-gray-500 hidden">
-                    <div className="flex items-center justify-center">Role</div>
-                  </th>
                   <th className="p-2 border-r cursor-pointer text-sm font-thin text-gray-500">
                     <div className="flex items-center justify-center">Role</div>
                   </th>
                   <th className="p-2 border-r cursor-pointer text-sm font-thin text-gray-500">
                     <div className="flex items-center justify-center">
-                      Import At
+                      Update At
                     </div>
                   </th>
                   <th className="p-2 border-r cursor-pointer text-sm font-thin text-gray-500">
                     <div className="flex items-center justify-center">
-                      Price
+                      Old Price
                     </div>
                   </th>
                   <th className="p-2 border-r cursor-pointer text-sm font-thin text-gray-500">
                     <div className="flex items-center justify-center">
-                      Quantity
+                      New Price
                     </div>
                   </th>
                 </tr>
               </thead>
               <tbody>
-                {importList?.length > 0 ? (
-                  importList
+                {historyList?.length > 0 ? (
+                  historyList
                     .reverse()
                     .map((item: any, index: number) => (
                       <ImportRow item={item} />
@@ -103,11 +97,8 @@ const ImportRow = (props: any) => {
       <td className="p-2 border-r">{item?.admin?.name}</td>
       <td className="p-2 border-r">{item?.admin?.role}</td>
       <td className="p-2 border-r">{formatDate2(item?.createdAt)}</td>
-      {/* <td className="p-2 border-r">{item?.createdAt}</td> */}
-      <td className="p-2 border-r ">
-        {moneyFormater(item?.products[0]?.price)}
-      </td>
-      <td className="p-2 border-r">{item?.products[0]?.quantity}</td>
+      <td className="p-2 border-r ">{item?.old_price}</td>
+      <td className="p-2 border-r ">{item?.new_price}</td>
     </tr>
   );
 };

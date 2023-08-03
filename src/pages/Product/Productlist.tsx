@@ -16,6 +16,7 @@ import { moneyFormater } from "../../utils/moneyFormater";
 import { notifyError, notifySuccess } from "../../utils/notify";
 import Category from "../Category/Createcategory";
 import ModalHistoryImport from "../../components/Modal/ModalProduct/modalHistoryImport";
+import ModalHistoryPrice from "../../components/Modal/ModalProduct/modalHistoryPrice";
 type Props = {};
 
 function Productlist(props: Props) {
@@ -30,6 +31,7 @@ function Productlist(props: Props) {
   const [showModalDiscount, setShowModalDiscount] = useState(false);
   const [showModalUpdateProduct, setShowModalUpdateProduct] = useState(false);
   const [showModalHistoryImport, setShowModalHistoryImport] = useState(false);
+  const [showModalHistoryPrice, setShowModalHistoryPrice] = useState(false);
   const [productList, setProductlist] = useState<Array<any>>([]);
   const [reLoad, setReload] = useState(0);
 
@@ -38,6 +40,7 @@ function Productlist(props: Props) {
   const [idColor, setIdcolor] = useState("ACS");
   const [_idProduct, set_idProduct] = useState("");
   const [nameProduct, setNameProduct] = useState("");
+  const [codeProduct, setCodeProduct] = useState("");
   const [enable, setEnable] = useState(0);
   const [category, setCategory] = useState<Array<any>>([]);
   const [filterCategory, setFilterCategory] = useState("");
@@ -65,15 +68,21 @@ function Productlist(props: Props) {
     } else notifyError("Fail");
   };
 
-  const hadnleAddColor = (_id: any) => {
-    set_idProduct(_id);
-    setShowModalHistoryImport(true);
-  };
+  // const hadnleAddColor = (_id: any) => {
+  //   set_idProduct(_id);
+  //   setShowModalHistoryImport(true);
+  // };
 
   const hadnleShowHistoryImport = (_id: any, name: any) => {
     set_idProduct(_id);
     setNameProduct(name);
     setShowModalHistoryImport(true);
+  };
+
+  const hadnleShowHistoryPrice = (code: any, name: any) => {
+    setCodeProduct(code);
+    setNameProduct(name);
+    setShowModalHistoryPrice(true);
   };
 
   const handleImportProduct = (_id: any) => {
@@ -244,7 +253,7 @@ function Productlist(props: Props) {
               >
                 <div className="flex items-center justify-center">
                   Quantity
-                  <svg
+                  {/* <svg
                     xmlns="http://www.w3.org/2000/svg"
                     className="h-4 w-4"
                     fill="none"
@@ -257,7 +266,7 @@ function Productlist(props: Props) {
                       strokeWidth="2"
                       d="M8 9l4-4 4 4m0 6l-4 4-4-4"
                     />
-                  </svg>
+                  </svg> */}
                 </div>
               </th>
               <th className="p-2 border-r cursor-pointer text-sm font-thin text-gray-500">
@@ -295,6 +304,7 @@ function Productlist(props: Props) {
                     handleImportProduct={handleImportProduct}
                     hadnleShowHistoryImport={hadnleShowHistoryImport}
                     handleUpdateProduct={handleUpdateProduct}
+                    hadnleShowHistoryPrice={hadnleShowHistoryPrice}
                     id={index}
                     key={item?._id}
                     handleImportDiscount={handleImportDiscount}
@@ -357,6 +367,14 @@ function Productlist(props: Props) {
           setReload={setReload}
         />
       )}
+      {showModalHistoryPrice && (
+        <ModalHistoryPrice
+          setOpenModalHistoryPrice={setShowModalHistoryPrice}
+          code={codeProduct}
+          nameProduct={nameProduct}
+          setReload={setReload}
+        />
+      )}
     </>
   );
 }
@@ -368,12 +386,12 @@ const ProductRow = (props: any) => {
     item,
     handleImportProduct,
     hadnleShowHistoryImport,
+    hadnleShowHistoryPrice,
     handleUpdateProduct,
     id,
     handleImportDiscount,
     handleEnableProduct,
   } = props;
-
   const [colorQuantity, setColorQuantity] = useState(item.totalQuantity);
 
   return (
@@ -430,7 +448,15 @@ const ProductRow = (props: any) => {
           }}
           className="bg-yellow-500 p-2 text-white hover:shadow-lg text-xs font-thin cursor-pointer"
         >
-          <span>History</span>
+          <span>History Import</span>
+        </a>
+        <a
+          onClick={() => {
+            hadnleShowHistoryPrice(item.code, item.name);
+          }}
+          className="bg-purple-500 p-2 text-white hover:shadow-lg text-xs font-thin cursor-pointer"
+        >
+          <span>History Price</span>
         </a>
         <a
           onClick={() => {

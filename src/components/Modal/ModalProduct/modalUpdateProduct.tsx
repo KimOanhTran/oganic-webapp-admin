@@ -5,6 +5,8 @@ import { useForm } from "react-hook-form";
 import categoryApi from "../../../apis/category/categoryApi";
 import productApi from "../../../apis/product/product";
 import { notifyError, notifySuccess } from "../../../utils/notify";
+import authApi from "../../../apis/auth/authApi";
+import supplierApi from "../../../apis/supplier/supplierApi";
 
 export default function ModalUpdateProduct({
   setOpenModalUpdateProduct,
@@ -18,6 +20,8 @@ export default function ModalUpdateProduct({
   const [selectValue, setSelectValue] = useState([]);
   const [product, setProduct] = useState<any>();
   const [resetModal, setResetModal] = useState(0);
+  const [supplier, setSupplier] = useState<Array<any>>([]);
+  const [idUpdater, setIdUpdater] = useState("");
 
   // console.log(_id)
 
@@ -54,8 +58,10 @@ export default function ModalUpdateProduct({
       specs: specs,
       price: data.price,
       sale: data.sale,
+      supplier_name: data.supplier,
       image_base64: imagesBase64,
       _id: _id,
+      idUpdater: idUpdater,
     };
 
     const result = await productApi.updateProduct(payload);
@@ -96,9 +102,12 @@ export default function ModalUpdateProduct({
   useEffect(() => {
     (async () => {
       const result = await categoryApi.getCategory();
+      const currentUser = await authApi.getInfo();
       const sendId = "_id=" + _id;
       const resultProduct = await productApi.getDetilaProduct(sendId);
-      //   console.log("detail", resultProduct);
+      const resultSupplier = await supplierApi.getListSupplier();
+      setSupplier(resultSupplier.data);
+      setIdUpdater(currentUser.data._id);
       setCategory(result.data);
       setProduct(resultProduct.data);
       toDataUrl(resultProduct.data.image_url, function (res: any) {
@@ -183,6 +192,21 @@ export default function ModalUpdateProduct({
                       placeholder="Sale"
                       defaultValue={product?.sale}
                     />
+                  </div>
+                  <div className="name flex justify-between items-center gap-2 mb-[20px]">
+                    <div className="">Supplier: </div>
+                    <select
+                      value={product?.supplier_name}
+                      {...register("supplier")}
+                      className="shadow appearance-none border rounded py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline w-[200px]"
+                    >
+                      <option value={""}>Chọn</option>
+                      {supplier.map((item: any, index: any) => (
+                        <option key={index} value={item.name}>
+                          {item.name}
+                        </option>
+                      ))}
+                    </select>
                   </div>
                 </div>
                 <div className="center w-[400px]">

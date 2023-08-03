@@ -47,8 +47,11 @@ const productApi = {
   },
 
   getListImportById(payload: any): Promise<ReturnReponse<any>> {
-    console.log(payload);
     const url = "/product/listImport";
+    return axiosClient.post(url, payload);
+  },
+  getListHistoryPriceById(payload: any): Promise<ReturnReponse<any>> {
+    const url = "/product/listHistoryPrice";
     return axiosClient.post(url, payload);
   },
 };
