@@ -15,6 +15,7 @@ import Pagination from "../../components/Pangination/Pagination";
 import { moneyFormater } from "../../utils/moneyFormater";
 import { notifyError, notifySuccess } from "../../utils/notify";
 import Category from "../Category/Createcategory";
+import ModalHistoryImport from "../../components/Modal/ModalProduct/modalHistoryImport";
 type Props = {};
 
 function Productlist(props: Props) {
@@ -28,6 +29,7 @@ function Productlist(props: Props) {
   const [showModalColor, setShowModalColor] = useState(false);
   const [showModalDiscount, setShowModalDiscount] = useState(false);
   const [showModalUpdateProduct, setShowModalUpdateProduct] = useState(false);
+  const [showModalHistoryImport, setShowModalHistoryImport] = useState(false);
   const [productList, setProductlist] = useState<Array<any>>([]);
   const [reLoad, setReload] = useState(0);
 
@@ -35,6 +37,7 @@ function Productlist(props: Props) {
   const [order, setOrder] = useState("ACS");
   const [idColor, setIdcolor] = useState("ACS");
   const [_idProduct, set_idProduct] = useState("");
+  const [nameProduct, setNameProduct] = useState("");
   const [enable, setEnable] = useState(0);
   const [category, setCategory] = useState<Array<any>>([]);
   const [filterCategory, setFilterCategory] = useState("");
@@ -63,8 +66,14 @@ function Productlist(props: Props) {
   };
 
   const hadnleAddColor = (_id: any) => {
-    setIdcolor(_id);
-    setShowModalColor(true);
+    set_idProduct(_id);
+    setShowModalHistoryImport(true);
+  };
+
+  const hadnleShowHistoryImport = (_id: any, name: any) => {
+    set_idProduct(_id);
+    setNameProduct(name);
+    setShowModalHistoryImport(true);
   };
 
   const handleImportProduct = (_id: any) => {
@@ -284,7 +293,7 @@ function Productlist(props: Props) {
                   <ProductRow
                     item={item}
                     handleImportProduct={handleImportProduct}
-                    hadnleAddColor={hadnleAddColor}
+                    hadnleShowHistoryImport={hadnleShowHistoryImport}
                     handleUpdateProduct={handleUpdateProduct}
                     id={index}
                     key={item?._id}
@@ -340,6 +349,14 @@ function Productlist(props: Props) {
           setReload={setReload}
         />
       )}
+      {showModalHistoryImport && (
+        <ModalHistoryImport
+          setOpenModalHistoryImport={setShowModalHistoryImport}
+          _id={_idProduct}
+          nameProduct={nameProduct}
+          setReload={setReload}
+        />
+      )}
     </>
   );
 }
@@ -350,7 +367,7 @@ const ProductRow = (props: any) => {
   const {
     item,
     handleImportProduct,
-    hadnleAddColor,
+    hadnleShowHistoryImport,
     handleUpdateProduct,
     id,
     handleImportDiscount,
@@ -409,7 +426,7 @@ const ProductRow = (props: any) => {
         </a>
         <a
           onClick={() => {
-            hadnleAddColor(item._id);
+            hadnleShowHistoryImport(item._id, item.name);
           }}
           className="bg-yellow-500 p-2 text-white hover:shadow-lg text-xs font-thin cursor-pointer"
         >

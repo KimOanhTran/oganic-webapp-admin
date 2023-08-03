@@ -4,6 +4,7 @@ import React, { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import productApi from "../../../apis/product/product";
 import { notifyError, notifySuccess } from "../../../utils/notify";
+import authApi from "../../../apis/auth/authApi";
 
 export default function ModalImport({
   setOpenModalImport,
@@ -65,6 +66,8 @@ export default function ModalImport({
       console.log(result);
       setColorModal(result.data.colors);
       setNameProduct(result.data.name);
+      // const currentUser = await authApi.getInfo();
+      // console.log(currentUser.data.name);
     })();
   }, []);
 
