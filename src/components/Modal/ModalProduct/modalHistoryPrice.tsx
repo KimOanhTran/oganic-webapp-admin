@@ -55,7 +55,7 @@ export default function ModalHistoryPrice({
                       Update At
                     </div>
                   </th>
-                  <th className="p-2 border-r cursor-pointer text-sm font-thin text-gray-500">
+                  <th className="p-2 border-r cursor-pointer text-sm font-thin text-gray-500 hidden">
                     <div className="flex items-center justify-center">
                       Old Price
                     </div>
@@ -97,7 +97,7 @@ const ImportRow = (props: any) => {
       <td className="p-2 border-r">{item?.admin?.name}</td>
       <td className="p-2 border-r">{item?.admin?.role}</td>
       <td className="p-2 border-r">{formatDate2(item?.createdAt)}</td>
-      <td className="p-2 border-r ">{item?.old_price}</td>
+      <td className="p-2 border-r hidden ">{item?.old_price}</td>
       <td className="p-2 border-r ">{item?.new_price}</td>
     </tr>
   );
