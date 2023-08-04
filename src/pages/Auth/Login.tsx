@@ -23,7 +23,7 @@ const Login = (props: Props) => {
     const result = await authApi.login(params);
     console.log("asdasd");
     console.log(result);
-    if (result.response.data.error == true) {
+    if (result.error == true) {
       console.log("?");
       notifyError("Invalid email or password");
       return;
