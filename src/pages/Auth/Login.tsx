@@ -10,6 +10,10 @@ import { notifyError } from "../../utils/notify";
 import { signInSchema } from "../../validate/auth";
 type Props = {};
 
+type ErrorResponseType = boolean | undefined;
+const responseHasError = (err: ErrorResponseType) =>
+  [null, undefined, NaN, true].some((type) => type === err);
+
 const Login = (props: Props) => {
   type FormValues = {
     username: string;
@@ -21,10 +25,8 @@ const Login = (props: Props) => {
 
   const login = async (params: IReqLogin) => {
     const result = await authApi.login(params);
-    console.log("asdasd");
-    console.log(result);
-    if (result.response.data.error == true) {
-      console.log("?");
+    // console.log(result);
+    if (responseHasError(result.error)) {
       notifyError("Invalid email or password");
       return;
     }

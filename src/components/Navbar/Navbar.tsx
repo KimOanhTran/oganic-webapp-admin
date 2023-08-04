@@ -228,9 +228,6 @@ const Navbar = (props: Props) => {
                     Profile
                   </Link>
                 </div>
-                <div className="px-4 py-4 text-gray-800 hover:bg-indigo-500 hover:text-white">
-                  Awards
-                </div>
                 <div
                   className="px-4 py-4 text-gray-800 hover:bg-indigo-500 hover:text-white rounded-bl-lg rounded-br-lg border-t-[1px] border-white border-solid"
                   onClick={handleLogout}
@@ -271,9 +268,6 @@ const Navbar = (props: Props) => {
                   <Link className="text-gray-800" to="/profile">
                     Profile
                   </Link>
-                </div>
-                <div className="px-4 py-4 text-gray-800 hover:bg-indigo-500 hover:text-white">
-                  Awards
                 </div>
                 <div
                   className="px-4 py-4 text-gray-800 hover:bg-indigo-500 hover:text-white rounded-bl-lg rounded-br-lg border-t-[1px] border-white border-solid"

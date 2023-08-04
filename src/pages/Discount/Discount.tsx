@@ -257,7 +257,7 @@ function DiscountList(props: Props) {
                     >
                       {item?.enable === false ? "Enable" : "Disable"}
                     </a>
-                    <a className="bg-red-500 p-2 text-white hover:shadow-lg text-xs font-thin cursor-pointer">
+                    <a className="bg-orange-500 p-2 text-white hover:shadow-lg text-xs font-thin cursor-pointer">
                       <span onClick={() => handleRemove(item?._id, item?.code)}>
                         Remove
                       </span>
