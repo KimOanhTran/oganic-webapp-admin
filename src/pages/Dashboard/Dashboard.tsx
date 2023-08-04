@@ -21,10 +21,15 @@ type Props = {};
 const Dashboard = (props: Props) => {
   const [dateEnd, setDateEnd] = useState("");
   const [dateStart, setDateStart] = useState("");
+  //Lưu trữ bước thống kê (theo sp, ngày, tháng, năm)
   const [step, setStep] = useState("month");
+  //Lưu trữ loại thống kê (doanh thu hoặc nhập kho)
   const [type, setType] = useState("bill");
+  //Dữ liệu doanh thu và số lượng sản phẩm
   const [dataChart, setDataChart] = useState({ graph: [], products: [] });
+  //Lưu trữ danh sách sản phẩm từ API
   const [productList, setProductList] = useState<Array<any>>([]);
+  //ẩn hay hiện modalchart
   const [showModalChart, setShowModalChart] = useState(false);
 
   const data = dataChart.graph.map((item: any, index: number) => {
@@ -203,11 +208,15 @@ const Dashboard = (props: Props) => {
                 <div className="flex items-center justify-center">Name</div>
               </th>
               <th className="p-2 border-r cursor-pointer text-sm font-thin text-gray-500">
-                <div className="flex items-center justify-center">Quantity</div>
+                <div className="flex items-center justify-center">
+                  Inventory items
+                </div>
               </th>
 
               <th className="p-2 border-r cursor-pointer text-sm font-thin text-gray-500">
-                <div className="flex items-center justify-center">Sold</div>
+                <div className="flex items-center justify-center">
+                  Sold/Total product quantity.
+                </div>
               </th>
               <th className="p-2 border-r cursor-pointer text-sm font-thin text-gray-500">
                 <div className="flex items-center justify-center">Total</div>
