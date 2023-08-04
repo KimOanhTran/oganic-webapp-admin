@@ -13,6 +13,7 @@ const Navbar = (props: Props) => {
   const handleLogout = () => {
     dispatch(updateAuthStatus(false));
     localStorage.removeItem("token");
+    window.location.pathname = "";
   };
 
   return (

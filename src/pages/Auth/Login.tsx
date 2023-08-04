@@ -21,8 +21,10 @@ const Login = (props: Props) => {
 
   const login = async (params: IReqLogin) => {
     const result = await authApi.login(params);
+    console.log("asdasd");
     console.log(result);
-    if (result.error == true) {
+    if (result.response.data.error == true) {
+      console.log("?");
       notifyError("Invalid email or password");
       return;
     }
