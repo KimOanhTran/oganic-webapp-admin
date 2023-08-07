@@ -49,7 +49,7 @@ function BillList(props: Props) {
         `?status=${e.target.value}`
       );
       // console.log(resultStatus);
-      setBillList(resultStatus.data);
+      setBillList(resultStatus.data.reverse());
       // if(resultStatus.statusCode === 200) {
       // }
     })();
@@ -101,7 +101,7 @@ function BillList(props: Props) {
       const skip = currentPage * LIMIT;
       const result = await billApi.getListBill(skip, LIMIT);
 
-      setBillList(result.data);
+      setBillList(result.data.reverse());
       console.log(result);
       setTotal(result.count);
     })();

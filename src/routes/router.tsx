@@ -82,15 +82,20 @@ const Router = (props: Props) => {
           ) : role === "Sale" ? (
             <Routes>
               <Route path="/" element={<BillList />} />
+              <Route path="/userlist" element={<Userlist />} />
               <Route path="/billlist" element={<BillList />} />
               <Route path="/chat" element={<Chat />} />
+              <Route path="/profile" element={<Profile />} />
               <Route path="*" element={<NotFoundPage />} />
             </Routes>
           ) : role === "Warehouse" ? (
             <Routes>
               <Route path="/" element={<BillList />} />
+              <Route path="/supplier" element={<Supplier />} />
+              <Route path="/categorylist" element={<Category />} />
               <Route path="/productlist" element={<Productlist />} />
               <Route path="/discountlist" element={<DiscountList />} />
+              <Route path="/profile" element={<Profile />} />
               <Route path="*" element={<NotFoundPage />} />
             </Routes>
           ) : (

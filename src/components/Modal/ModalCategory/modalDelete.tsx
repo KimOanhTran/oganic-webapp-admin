@@ -21,7 +21,7 @@ export default function ModalDelete({
         reload((ref: number) => ref + 1);
         setOpenModalDeleteCategory(false);
       } else {
-        notifyError("Delete Fail");
+        notifyError("Danh mục đã tồn tại sản phẩm");
       }
     } catch (error) {
       console.log("Error deleting supplier:", error);

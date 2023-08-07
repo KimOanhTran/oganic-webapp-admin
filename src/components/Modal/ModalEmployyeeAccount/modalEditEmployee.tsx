@@ -121,7 +121,6 @@ export default function ModelEditEmployee({
                     value={selectedRole} // Thay đổi giá trị value thành selectedRole
                     onChange={handleSelectChange}
                   >
-                    <option value="User">User</option>
                     <option value="Admin">Admin</option>
                     <option value="Sale">Sale</option>
                     <option value="Warehouse">Warehouse</option>

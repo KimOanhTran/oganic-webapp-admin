@@ -15,11 +15,11 @@ export default function ModalDelete({
       console.log("status", result.statusCode);
 
       if (result.statusCode === 200) {
-        notifySuccess("Update Success");
+        notifySuccess("Delete Success");
         reload((ref: number) => ref + 1);
         setOpenModalDeleteSupplier(false);
       } else {
-        notifyError("Update Fail");
+        notifyError("Nhà cung cấp đã tồn tại sản phẩm!");
       }
     } catch (error) {
       console.log("Error deleting supplier:", error);
