@@ -16,6 +16,8 @@ import { Result, Tooltip } from "antd";
 import { formatDate } from "../../utils/dateFormater";
 import { moneyFormater } from "../../utils/moneyFormater";
 import ModalChart from "../../components/Modal/ModalChart/ModalChart";
+import Item from "antd/lib/list/Item";
+import ModalRevenue from "../../components/Modal/ModalChart/modalHistoryPrice";
 type Props = {};
 
 const Dashboard = (props: Props) => {
@@ -26,13 +28,19 @@ const Dashboard = (props: Props) => {
   //Lưu trữ loại thống kê (doanh thu hoặc nhập kho)
   const [type, setType] = useState("bill");
   //Dữ liệu doanh thu và số lượng sản phẩm
-  const [dataChart, setDataChart] = useState({ graph: [], products: [] });
+  const [dataChart, setDataChart] = useState({ tempGraph: [], products: [] });
   //Lưu trữ danh sách sản phẩm từ API
   const [productList, setProductList] = useState<Array<any>>([]);
   //ẩn hay hiện modalchart
   const [showModalChart, setShowModalChart] = useState(false);
+  const [showModalRevenue, setShowModalRevenue] = useState(false);
+  const [reload, setReload] = useState(0);
 
-  const data = dataChart.graph.map((item: any, index: number) => {
+  const [product, setProduct] = useState({});
+  const [money, setMoney] = useState("");
+  const [listImport, setListImport] = useState<Array<any>>([]);
+
+  const data = dataChart?.tempGraph.map((item: any, index: number) => {
     return {
       time: formatDate(item?.time),
       revenue: item?.total,
@@ -73,9 +81,37 @@ const Dashboard = (props: Props) => {
       });
       console.log("api", result.data);
       setDataChart(result.data);
-      setProductList(result.data.products);
+      setProductList(result.data?.listProduct);
+
+      if (type === "bill") {
+        setListImport(result.data?.tempListProduct);
+      }
+      console.log(result.data?.tempListProduct);
+      // const resultCaculor = await revanueApi.getcalculateProfitLoss({
+      //   dateStart,
+      //   dateEnd,
+      //   type,
+      //   step,
+      // });
+      // console.log("api", resultCaculor.data);
     })();
   }, [dateEnd, dateStart, type, step]);
+
+  const handleGetIDProduct = (name: any, _id: any, money: any) => {
+    // console.log(_id);
+    listImport.forEach(function (item) {
+      const itemFound = listImport.find(
+        (item) => item._id.toString() === _id.toString()
+      );
+      if (itemFound) {
+        setProduct(itemFound);
+      }
+      // console.log(item._id);
+      // console.log(_id + name);
+    });
+    setShowModalRevenue(true);
+    setMoney(money);
+  };
 
   return (
     <div className="layout">
@@ -221,6 +257,11 @@ const Dashboard = (props: Props) => {
               <th className="p-2 border-r cursor-pointer text-sm font-thin text-gray-500">
                 <div className="flex items-center justify-center">Total</div>
               </th>
+              <th className="p-2 border-r cursor-pointer text-sm font-thin text-gray-500">
+                <div className="flex items-center justify-center">
+                  View Revenue
+                </div>
+              </th>
             </tr>
           </thead>
           <tbody>
@@ -236,6 +277,22 @@ const Dashboard = (props: Props) => {
                   <td className="p-2 border-r">{item.quantity}</td>
                   <td className="p-2 border-r">{item.sold}</td>
                   <td className="p-2 border-r">{moneyFormater(item.total)}</td>
+                  <td className="p-2 border-r">
+                    {type !== "bill" ? null : (
+                      <a
+                        onClick={() => {
+                          handleGetIDProduct(
+                            item?.name,
+                            item?._id,
+                            item?.total
+                          );
+                        }}
+                        className="bg-blue-500 p-2 text-white hover:shadow-lg text-xs font-thin cursor-pointer"
+                      >
+                        Revenue
+                      </a>
+                    )}
+                  </td>
                 </tr>
               ))
             ) : (
@@ -251,6 +308,14 @@ const Dashboard = (props: Props) => {
           setOpenModalChart={setShowModalChart}
           dateStart={new Date(dateStart).getTime()}
           dateEnd={new Date(dateEnd).getTime()}
+        />
+      )}
+      {showModalRevenue && (
+        <ModalRevenue
+          setOpenModalRevenue={setShowModalRevenue}
+          product={product}
+          setReload={setReload}
+          money={money}
         />
       )}
     </div>

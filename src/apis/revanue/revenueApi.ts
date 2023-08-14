@@ -11,6 +11,11 @@ const revanueApi = {
     const url = "/bill/revenue"; //params : page, filter
     return axiosClient.post(url, data);
   },
+
+  getcalculateProfitLoss(data: any): Promise<ReturnReponse<any>> {
+    const url = "/bill/calculateProfitLoss"; //params : page, filter
+    return axiosClient.post(url, data);
+  },
 };
 
 export default revanueApi;

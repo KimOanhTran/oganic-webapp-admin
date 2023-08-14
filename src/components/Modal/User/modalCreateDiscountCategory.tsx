@@ -79,8 +79,17 @@ export default function ModalDiscountUser({
   useEffect(() => {
     (async () => {
       const result = await discountApi.getListDiscount();
-      console.log("listDiscount", result);
-      setListDiscount(result.data);
+      console.log("listDiscount", result.data);
+
+      const filteredDiscounts = result.data.filter(
+        (value: any) => new Date(value.dateEnd) >= new Date()
+      );
+      console.log(
+        "Expired discounts:",
+        result.data.filter((value: any) => new Date(value.dateEnd) < new Date())
+      );
+
+      setListDiscount(filteredDiscounts);
     })();
   }, []);
 

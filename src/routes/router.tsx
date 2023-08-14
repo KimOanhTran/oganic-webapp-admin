@@ -22,6 +22,7 @@ import { updateAuthRole, updateAuthStatus } from "../Redux/authSlice";
 import { RootState } from "../Redux/store";
 import AccountEmployee from "../pages/Employee Account/AccountEmployee";
 import Supplier from "../pages/Supplier/Supplier";
+import { IReqRefreshToken } from "../apis/auth/auth.interface";
 
 type Props = {};
 
@@ -32,10 +33,18 @@ const Router = (props: Props) => {
   const dispatch = useDispatch();
 
   useEffect(() => {
-    if (localStorage.getItem("token")) {
-      dispatch(updateAuthStatus(true));
-    }
-  }, []); // useEffect đầu tiên được sử dụng để kiểm tra xem người dùng đã đăng nhập hay chưa, thông qua kiểm tra sự tồn tại của token trong localStrorage. Nếu có token nó gửi một action đến redux store để cập nhập trạng thái xác thực auth thành true
+    console.log(localStorage.getItem("token"));
+    const token = localStorage.getItem("token");
+
+    const refreshToken = async () => {
+      if (token) {
+        dispatch(updateAuthStatus(true));
+      }
+    };
+
+    refreshToken();
+  }, []);
+  // useEffect đầu tiên được sử dụng để kiểm tra xem người dùng đã đăng nhập hay chưa, thông qua kiểm tra sự tồn tại của token trong localStrorage. Nếu có token nó gửi một action đến redux store để cập nhập trạng thái xác thực auth thành true
 
   useEffect(() => {
     if (auth) {
@@ -44,7 +53,11 @@ const Router = (props: Props) => {
         dispatch(updateAuthRole(result.data.role));
         // console.log(result.data);
       })();
-    } //sử dụng để lấy thông tin người dùng từ server khi trạng thái xác thực (auth) thay đổi. Nếu người dùng đã đăng nhập thì một hàm async được gọi để lấy thông tin người dùng thông qua authApi.getInfo().
+    } else {
+      // window.location.pathname = "";
+    }
+
+    //sử dụng để lấy thông tin người dùng từ server khi trạng thái xác thực (auth) thay đổi. Nếu người dùng đã đăng nhập thì một hàm async được gọi để lấy thông tin người dùng thông qua authApi.getInfo().
     //Kết quả sau đó được sử dụng để cập nhật vai trò của người dùng ('role') thông qua hàm 'dispatch(updateAuthRole(result.data.role))'
   }, [auth]);
 

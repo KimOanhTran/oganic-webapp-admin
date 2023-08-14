@@ -122,6 +122,7 @@ export default function ModalCreate({ setOpenModal, setReload }: any) {
       setCategory(result.data);
       const currentUser = await authApi.getInfo();
       setIdUpdater(currentUser.data._id);
+      console.log(currentUser);
     })();
   }, []);
 

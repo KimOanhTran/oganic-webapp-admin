@@ -3,6 +3,9 @@ export interface IReqLogin {
   password: Number;
 }
 
+export interface IReqRefreshToken {
+  token: string;
+}
 export interface IReqRegiser {
   email: string;
   phone: string;

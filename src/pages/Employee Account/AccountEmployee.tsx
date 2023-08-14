@@ -230,7 +230,9 @@ function Userlist(props: Props) {
                   .filter((value: any, index: number) => {
                     if (searchItem == "") {
                       return (
-                        value.role === "Sale" || value.role === "Warehouse"
+                        value.role === "Sale" ||
+                        value.role === "Warehouse" ||
+                        value.role === "Admin"
                       );
                     } else if (
                       value?.name
