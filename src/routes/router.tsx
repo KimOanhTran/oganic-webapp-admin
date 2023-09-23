@@ -98,6 +98,7 @@ const Router = (props: Props) => {
               <Route path="/userlist" element={<Userlist />} />
               <Route path="/billlist" element={<BillList />} />
               <Route path="/chat" element={<Chat />} />
+              <Route path="/discountlist" element={<DiscountList />} />
               <Route path="/profile" element={<Profile />} />
               <Route path="*" element={<NotFoundPage />} />
             </Routes>

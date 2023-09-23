@@ -44,7 +44,8 @@ export default function ModalRegiserEmployee({
     };
     console.log(payload);
     const result = await authApi.register(payload);
-    if ((result.msg = "Thành công ")) {
+    console.log(result.message);
+    if (result.message === "Account created") {
       notifySuccess("Success");
       reload((ref: any) => ref + 1);
       reset();
