@@ -40,7 +40,7 @@ const Dashboard = (props: Props) => {
   const [money, setMoney] = useState("");
   const [listImport, setListImport] = useState<Array<any>>([]);
 
-  const data = dataChart?.tempGraph.map((item: any, index: number) => {
+  const data = dataChart?.tempGraph?.map((item: any, index: number) => {
     return {
       time: formatDate(item?.time),
       revenue: item?.total,
